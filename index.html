@@ -23,6 +23,10 @@
 
   <!-- Konfigurasi Firebase -->
   <script>
+    // Base Path untuk GitHub Pages
+    const isGitHubPages = window.location.hostname === 'radiansyah635.github.io';
+    const basePath = isGitHubPages ? '/wallet-qc-app/' : '/';
+    
     const firebaseConfig = {
       apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
       authDomain: "wallet-qc-local-storage.firebaseapp.com",
@@ -35,8 +39,15 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const analytics = firebase.analytics();
     window.firebase = firebase;
+  </script>
+  
+  <!-- Utilitas Global -->
+  <script>
+    // Fungsi untuk memperbaiki path berdasarkan environment
+    window.resolvePath = (path) => {
+      return basePath + path.replace(/^\//, '');
+    };
   </script>
 </head>
 <body>
@@ -46,23 +57,32 @@
 
   <div id="notification-container"></div>
 
-  <!-- ✅ Path JS diperbaiki untuk GitHub Pages -->
+  <!-- ✅ Load JS dengan path yang diperbaiki -->
+  <script type="module" src="js/utils.js"></script>
+  
   <script type="module">
     import { loadComponent, showNotification } from './js/utils.js';
 
-    document.addEventListener('DOMContentLoaded', () => {
-      firebase.auth().onAuthStateChanged(async (user) => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Inisialisasi Firebase
+      await firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
-          const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-          if (userDoc.exists) {
-            const userData = userDoc.data();
-            if (userData.role === 'admin') {
-              await loadComponent('admin-panel');
+          try {
+            const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              if (userData.role === 'admin') {
+                await loadComponent('admin-panel');
+              } else {
+                await loadComponent('dashboard');
+              }
             } else {
-              await loadComponent('dashboard');
+              showNotification('Profil pengguna tidak ditemukan', 'error');
+              await loadComponent('login');
             }
-          } else {
-            showNotification('Profil pengguna tidak ditemukan', 'error');
+          } catch (error) {
+            console.error("Error loading user data:", error);
+            showNotification('Terjadi kesalahan saat memuat data pengguna', 'error');
             await loadComponent('login');
           }
         } else {
