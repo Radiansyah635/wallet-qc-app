@@ -68,7 +68,7 @@ export const loadComponent = async (componentName) => {
     await new Promise(resolve => setTimeout(resolve, 300));
     
     // Load komponen HTML
-    const response = await fetch(`/components/${componentName}.html`);
+    const response = await fetch(`components/${componentName}.html`);
     const html = await response.text();
     
     // Set HTML baru
