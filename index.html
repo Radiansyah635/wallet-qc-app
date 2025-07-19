@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QC Wallet App</title>
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Firebase SDK v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+  
+  <!-- Library Eksternal -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  
+  <!-- Konfigurasi Firebase -->
+  <script>
+    // Firebase configuration (v8)
+    const firebaseConfig = {
+      apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
+      authDomain: "wallet-qc-local-storage.firebaseapp.com",
+      databaseURL: "https://wallet-qc-local-storage-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "wallet-qc-local-storage",
+      storageBucket: "wallet-qc-local-storage.appspot.com", // Diperbaiki
+      messagingSenderId: "443546801664",
+      appId: "1:443546801664:web:d520fd8d2f311edd20aae5",
+      measurementId: "G-KVKSD7ES9P"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const analytics = firebase.analytics();
+    
+    // Ekspos untuk modul ES
+    window.firebase = firebase;
+  </script>
+</head>
+<body>
+  <div id="app">
+    <div id="loading">Memuat aplikasi...</div>
+  </div>
+
+  <div id="notification-container"></div>
+
+  <script type="module">
+    import { loadComponent, showNotification } from '/js/utils.js';
+    
+    // Inisialisasi aplikasi
+    document.addEventListener('DOMContentLoaded', () => {
+      firebase.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+          // Verifikasi user di Firestore
+          const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+          
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            
+            if (userData.role === 'admin') {
+              await loadComponent('admin-panel');
+            } else {
+              await loadComponent('dashboard');
+            }
+          } else {
+            showNotification('Profil pengguna tidak ditemukan', 'error');
+            await loadComponent('login');
+          }
+        } else {
+          await loadComponent('login');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<div class="admin-panel">
+  <div class="container">
+    <h1 class="text-gradient">Admin Dashboard</h1>
+    
+    <!-- Statistik Utama -->
+    <div class="grid grid-4">
+      <div class="card">
+        <div class="card-header">
+          <h3>Total Saldo QC</h3>
+          <div class="card-icon">💰</div>
+        </div>
+        <div class="text-success" style="font-size: 1.8rem; font-weight: 700;" id="total-saldo-qc">Rp 0</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3>Total User</h3>
+          <div class="card-icon">👥</div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 700;" id="total-user">0</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3>Transaksi Hari Ini</h3>
+          <div class="card-icon">↔</div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 700;" id="transaksi-hari-ini">0</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3>Agenda Aktif</h3>
+          <div class="card-icon">📅</div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 700;" id="agenda-aktif">0</div>
+      </div>
+    </div>
+    
+    <!-- Menu Admin -->
+    <div class="admin-menu">
+      <button class="admin-menu-btn active" data-target="user-management">Manajemen User</button>
+      <button class="admin-menu-btn" data-target="transaction-management">Manajemen Transaksi</button>
+      <button class="admin-menu-btn" data-target="agenda-management">Manajemen Agenda</button>
+      <button class="admin-menu-btn" data-target="social-management">Manajemen Sosial</button>
+      <button class="admin-menu-btn" data-target="system-settings">Pengaturan Sistem</button>
+    </div>
+    
+    <!-- Section: User Management -->
+    <div class="admin-section active" id="user-management">
+      <div class="card">
+        <div class="card-header">
+          <h2>Daftar User</h2>
+          <button class="btn-solana" id="btn-add-user">+ Tambah User</button>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Saldo</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="user-list">
+              <tr>
+                <td colspan="6">Memuat data user...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Section: Transaction Management -->
+    <div class="admin-section" id="transaction-management">
+      <div class="card">
+        <div class="card-header">
+          <h2>Manajemen Transaksi</h2>
+          <div>
+            <input type="text" id="search-transaction" class="form-input" placeholder="Cari transaksi..." style="width: 200px;">
+            <button class="btn-secondary" id="btn-filter-transactions">🔍 Filter</button>
+          </div>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>User</th>
+                <th>Jenis</th>
+                <th>Nominal</th>
+                <th>Keterangan</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="transaction-list">
+              <tr>
+                <td colspan="7">Memuat data transaksi...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Section: Agenda Management -->
+    <div class="admin-section" id="agenda-management">
+      <div class="card">
+        <div class="card-header">
+          <h2>Manajemen Agenda</h2>
+          <button class="btn-solana" id="btn-add-agenda">+ Tambah Agenda</button>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Tanggal</th>
+                <th>Lokasi</th>
+                <th>Kategori</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="agenda-list">
+              <tr>
+                <td colspan="6">Memuat data agenda...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Section: Social Management -->
+    <div class="admin-section" id="social-management">
+      <div class="card">
+        <div class="card-header">
+          <h2>Manajemen Postingan Sosial</h2>
+          <input type="text" id="search-posts" class="form-input" placeholder="Cari postingan..." style="width: 200px;">
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Penulis</th>
+                <th>Konten</th>
+                <th>Tanggal</th>
+                <th>Likes</th>
+                <th>Komentar</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="social-list">
+              <tr>
+                <td colspan="6">Memuat data postingan...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Section: System Settings -->
+    <div class="admin-section" id="system-settings">
+      <div class="grid grid-2">
+        <!-- Pengaturan Umum -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Pengaturan Umum</h2>
+          </div>
+          
+          <form id="general-settings">
+            <div class="form-group">
+              <label class="form-label" for="system-name">Nama Sistem</label>
+              <input type="text" id="system-name" class="form-input" value="QC Wallet">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="currency-symbol">Simbol Mata Uang</label>
+              <input type="text" id="currency-symbol" class="form-input" value="Rp">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="default-saldo">Saldo Awal User Baru</label>
+              <input type="number" id="default-saldo" class="form-input" value="100000">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="admin-email">Email Admin Utama</label>
+              <input type="email" id="admin-email" class="form-input" value="admin@qcwallets.com">
+            </div>
+            
+            <button type="submit" class="btn-solana">Simpan Pengaturan</button>
+          </form>
+        </div>
+        
+        <!-- Manajemen Role -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Manajemen Role</h2>
+          </div>
+          
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Jumlah User</th>
+                  <th>Hak Akses</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Admin</td>
+                  <td id="admin-count">2</td>
+                  <td>Full Access</td>
+                  <td>
+                    <button class="btn-secondary">Edit</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>User</td>
+                  <td id="user-count">24</td>
+                  <td>Limited Access</td>
+                  <td>
+                    <button class="btn-secondary">Edit</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Auditor</td>
+                  <td id="auditor-count">0</td>
+                  <td>Read Only</td>
+                  <td>
+                    <button class="btn-secondary">Edit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-right" style="margin-top: 1rem;">
+            <button class="btn-solana">+ Tambah Role Baru</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal untuk manajemen user -->
+  <div class="admin-modal" id="user-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="user-modal-title">Tambah User Baru</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="user-form">
+          <input type="hidden" id="edit-user-id">
+          
+          <div class="form-group">
+            <label class="form-label" for="user-name">Nama Lengkap</label>
+            <input type="text" id="user-name" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="user-email">Email</label>
+            <input type="email" id="user-email" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="user-role">Role</label>
+            <select id="user-role" class="form-input form-select" required>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+              <option value="auditor">Auditor</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="user-saldo">Saldo Awal</label>
+            <input type="number" id="user-saldo" class="form-input" value="100000">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="user-password">Password</label>
+            <input type="password" id="user-password" class="form-input" placeholder="Biarkan kosong jika tidak ingin mengubah">
+          </div>
+          
+          <div class="text-right">
+            <button type="submit" class="btn-solana">Simpan User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

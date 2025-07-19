@@ -1,0 +1,70 @@
+<div class="profile-page">
+  <div class="container">
+    <h1 class="text-gradient">Profil Saya</h1>
+    
+    <div class="grid grid-2">
+      <!-- Bagian Kiri: Informasi Profil -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Informasi Akun</h2>
+        </div>
+        
+        <form id="profile-form">
+          <div class="form-group">
+            <label class="form-label">Foto Profil</label>
+            <div class="avatar-upload">
+              <div class="avatar-preview">
+                <img id="avatar-preview" src="https://i.pravatar.cc/150?img=12" alt="Preview Avatar">
+              </div>
+              <input type="file" id="avatar-upload" accept="image/*" hidden>
+              <button type="button" class="btn-solana" onclick="document.getElementById('avatar-upload').click()">
+                Pilih Gambar
+              </button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" class="form-input" placeholder="Masukkan nama lengkap" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" class="form-input" placeholder="Email Anda" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="phone">Nomor Telepon</label>
+            <input type="tel" id="phone" class="form-input" placeholder="Contoh: 081234567890">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="jabatan">Jabatan</label>
+            <input type="text" id="jabatan" class="form-input" placeholder="Jabatan Anda">
+          </div>
+          
+          <button type="submit" class="btn-solana">
+            <i class="btn-icon">💾</i> Simpan Perubahan
+          </button>
+        </form>
+      </div>
+      
+      <!-- Bagian Kanan: Saldo dan QR Code -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Saldo & Transfer</h2>
+        </div>
+        
+        <div class="balance-display" id="profile-saldo">Rp 0</div>
+        <p class="text-center">Saldo saat ini</p>
+        
+        <div class="qr-container">
+          <h3>Transfer ke Saya</h3>
+          <p class="text-center">Scan QR code di bawah untuk transfer saldo</p>
+          <div id="qrcode" class="qr-code"></div>
+          <p class="text-center">atau gunakan ID: <strong id="user-id">user123</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="sosial-page">
+  <div class="container">
+    <h1 class="text-gradient">Sosial Media QC</h1>
+    
+    <!-- Form Buat Postingan -->
+    <div class="card">
+      <form id="post-form">
+        <div class="form-group">
+          <textarea id="post-content" class="form-input form-textarea" 
+                    placeholder="Apa yang ingin Anda bagikan?" rows="3"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="post-media">Tambah Media (Opsional)</label>
+          <input type="file" id="post-media" class="form-input" accept="image/*, video/*">
+          <div id="media-preview" class="media-preview"></div>
+        </div>
+        
+        <div class="text-right">
+          <button type="submit" class="btn-solana">
+            <i class="btn-icon">📢</i> Posting
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Feed Postingan -->
+    <div id="post-feed">
+      <div class="card">
+        <p>Memuat postingan...</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,163 @@
+<div class="dashboard">
+  <nav class="nav-solana">
+    <div class="nav-left">
+      <div class="nav-logo">QC Wallet</div>
+    </div>
+    
+    <div class="nav-menu">
+      <a href="#" class="nav-item active" onclick="loadComponent('dashboard')">Dashboard</a>
+      <a href="#" class="nav-item" onclick="loadComponent('profile')">Profil</a>
+      <a href="#" class="nav-item" onclick="loadComponent('transaksi')">Transaksi</a>
+      <a href="#" class="nav-item" onclick="loadComponent('agenda')">Agenda</a>
+      <a href="#" class="nav-item" onclick="loadComponent('sosial')">Sosial</a>
+    </div>
+    
+    <div class="nav-right">
+      <div class="user-info">
+        <span class="user-name">John Doe</span>
+        <span class="user-role">Admin</span>
+      </div>
+      <img src="https://i.pravatar.cc/150?img=12" alt="User" class="user-avatar">
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Balance Overview -->
+    <div class="balance-container">
+      <div class="balance-label">Total Saldo Kas</div>
+      <div class="balance-display" id="total-saldo">Rp 5.250.000</div>
+      <div class="flex-center" style="gap: 1rem; margin-top: 1rem;">
+        <button class="btn-solana" onclick="loadComponent('transaksi', {type: 'transfer'})">
+          <i class="btn-icon">→</i> Transfer Saldo
+        </button>
+        <button class="btn-secondary" onclick="loadComponent('transaksi', {type: 'topup'})">
+          <i class="btn-icon">+</i> Tambah Saldo
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-4">
+      <div class="card">
+        <div class="card-header">
+          <h3>Pemasukan</h3>
+          <div class="card-icon">↑</div>
+        </div>
+        <div class="text-success" style="font-size: 1.8rem; font-weight: 700;">Rp 7.500.000</div>
+        <p style="margin-bottom: 0;">+15% dari bulan lalu</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3>Pengeluaran</h3>
+          <div class="card-icon">↓</div>
+        </div>
+        <div class="text-danger" style="font-size: 1.8rem; font-weight: 700;">Rp 2.250.000</div>
+        <p style="margin-bottom: 0;">-5% dari bulan lalu</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3>Agenda</h3>
+          <div class="card-icon">📅</div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 700;">5</div>
+        <p style="margin-bottom: 0;">2 agenda mendatang</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3>Transaksi</h3>
+          <div class="card-icon">↔</div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 700;">24</div>
+        <p style="margin-bottom: 0;">3 menunggu konfirmasi</p>
+      </div>
+    </div>
+
+    <!-- Charts and Transactions -->
+    <div class="grid grid-2" style="margin-top: 2rem;">
+      <!-- Grafik Kas -->
+      <div class="card">
+        <h2>Grafik Kas QC</h2>
+        <div class="chart-container">
+          <canvas id="grafik-kas"></canvas>
+        </div>
+      </div>
+      
+      <!-- Recent Transactions -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Transaksi Terbaru</h2>
+          <a href="#" class="link-solana" onclick="loadComponent('transaksi')">Lihat Semua</a>
+        </div>
+        <div class="transaction-list">
+          <div class="transaction-item">
+            <div class="transaction-icon">↑</div>
+            <div class="transaction-details">
+              <div class="transaction-title">Gaji Bulan Juli</div>
+              <div class="transaction-date">18 Juli 2023, 09:30</div>
+            </div>
+            <div class="transaction-amount positive">+Rp 5.000.000</div>
+          </div>
+          
+          <div class="transaction-item">
+            <div class="transaction-icon">→</div>
+            <div class="transaction-details">
+              <div class="transaction-title">Transfer ke Budi</div>
+              <div class="transaction-date">17 Juli 2023, 14:15</div>
+            </div>
+            <div class="transaction-amount negative">-Rp 500.000</div>
+          </div>
+          
+          <div class="transaction-item">
+            <div class="transaction-icon">↓</div>
+            <div class="transaction-details">
+              <div class="transaction-title">Pembayaran Internet</div>
+              <div class="transaction-date">15 Juli 2023, 10:00</div>
+            </div>
+            <div class="transaction-amount negative">-Rp 350.000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Agenda -->
+    <div class="card mt-2">
+      <div class="card-header">
+        <h2>Agenda Mendatang</h2>
+        <a href="#" class="link-solana" onclick="loadComponent('agenda')">Lihat Semua</a>
+      </div>
+      <div class="agenda-grid">
+        <div class="card agenda-card">
+          <div class="agenda-badge">Penting</div>
+          <div class="agenda-date">20 JUL</div>
+          <div class="agenda-content">
+            <h3 class="agenda-title">Rapat QC Bulanan</h3>
+            <p>Rapat evaluasi kinerja tim QC dan perencanaan bulan depan</p>
+            <div class="agenda-meta">
+              <div class="agenda-time">⏰ 09:00 - 12:00</div>
+              <div class="agenda-location">📍 Ruang Meeting 3</div>
+            </div>
+            <div class="agenda-attachment">
+              <i class="btn-icon">📎</i> agenda-qc-juli.pdf
+            </div>
+          </div>
+        </div>
+        
+        <div class="card agenda-card">
+          <div class="agenda-badge">Umum</div>
+          <div class="agenda-date">25 JUL</div>
+          <div class="agenda-content">
+            <h3 class="agenda-title">Pelatihan Software Baru</h3>
+            <p>Pelatihan penggunaan software monitoring kualitas terbaru</p>
+            <div class="agenda-meta">
+              <div class="agenda-time">⏰ 13:00 - 16:00</div>
+              <div class="agenda-location">📍 Lab Komputer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

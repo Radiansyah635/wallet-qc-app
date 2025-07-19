@@ -1,0 +1,82 @@
+<div class="transaksi-page">
+  <div class="container">
+    <h1 class="text-gradient">Manajemen Transaksi</h1>
+    
+    <div class="card">
+      <div class="card-header">
+        <h2>Buat Transaksi Baru</h2>
+      </div>
+      
+      <form id="transaksi-form">
+        <!-- Admin bisa pilih user -->
+        <div id="admin-user-select" class="form-group" style="display: none;">
+          <label class="form-label" for="user-select">Pilih User</label>
+          <select id="user-select" class="form-input form-select"></select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="jenis-transaksi">Jenis Transaksi</label>
+          <select id="jenis-transaksi" class="form-input form-select" required>
+            <option value="pemasukan">Pemasukan</option>
+            <option value="pengeluaran">Pengeluaran</option>
+            <option value="transfer">Transfer ke User Lain</option>
+          </select>
+        </div>
+        
+        <!-- Form transfer hanya muncul saat dipilih -->
+        <div id="transfer-section" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="tujuan-transfer">Transfer ke</label>
+            <div class="flex" style="gap: 1rem;">
+              <select id="tujuan-transfer" class="form-input form-select" style="flex: 1;"></select>
+              <button type="button" class="btn-solana" id="btn-scan">Scan QR</button>
+            </div>
+          </div>
+          
+          <div id="qr-scanner" style="display: none; margin-bottom: 1rem;">
+            <video id="scanner-video" width="100%" style="border-radius: 12px;"></video>
+            <div id="scanner-result"></div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="nominal">Nominal</label>
+          <input type="number" id="nominal" class="form-input" placeholder="Masukkan nominal" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="keterangan">Keterangan</label>
+          <textarea id="keterangan" class="form-input form-textarea" placeholder="Deskripsi transaksi"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="bukti">Bukti Transaksi (Opsional)</label>
+          <input type="file" id="bukti" class="form-input" accept="image/*, .pdf">
+        </div>
+        
+        <button type="submit" class="btn-solana">
+          <i class="btn-icon">💳</i> Simpan Transaksi
+        </button>
+      </form>
+    </div>
+    
+    <div class="card mt-2">
+      <div class="card-header">
+        <h2>Riwayat Transaksi</h2>
+        <div>
+          <button class="btn-secondary" id="btn-export">📄 Export PDF</button>
+          <button class="btn-secondary" id="btn-filter">🔍 Filter</button>
+        </div>
+      </div>
+      
+      <div class="transaction-list" id="riwayat-transaksi">
+        <div class="transaction-item">
+          <div class="transaction-icon">↗</div>
+          <div class="transaction-details">
+            <div class="transaction-title">Memuat transaksi...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
