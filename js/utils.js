@@ -49,6 +49,17 @@ export const initAuthState = () => {
   });
 };
 
+// ✅ PERBAIKAN UTAMA: Fungsi resolvePath untuk GitHub Pages
+const resolvePath = (path) => {
+  // Deteksi jika di GitHub Pages
+  const isGitHubPages = window.location.hostname === 'radiansyah635.github.io';
+  
+  if (isGitHubPages) {
+    return `/wallet-qc-app/${path.replace(/^\//, '')}`;
+  }
+  return `/${path.replace(/^\//, '')}`;
+};
+
 // Load komponen secara dinamis
 export const loadComponent = async (componentName) => {
   try {
@@ -59,15 +70,15 @@ export const loadComponent = async (componentName) => {
     appElement.style.transform = 'translateY(-20px)';
     await new Promise(resolve => setTimeout(resolve, 300));
 
-    // ✅ Ganti ke path relatif untuk GitHub Pages
-    const response = await fetch(`components/${componentName}.html`);
+    // ✅ Gunakan resolvePath untuk komponen HTML
+    const response = await fetch(resolvePath(`components/${componentName}.html`));
     const html = await response.text();
 
     appElement.innerHTML = html;
     animateIn(appElement);
 
-    // ✅ Ganti path absolut menjadi relatif
-    const scriptPath = `./js/${componentName}.js`;
+    // ✅ Gunakan resolvePath untuk modul JavaScript
+    const scriptPath = resolvePath(`js/${componentName}.js`);
     try {
       const module = await import(scriptPath);
       if (module.init) module.init();
@@ -111,60 +122,73 @@ export const showNotification = (message, type = 'success') => {
     </div>
     <div class="notification-content">${message}</div>
   `;
-  document.body.appendChild(notification);
+  
+  // Tambahkan ke container khusus
+  const container = document.getElementById('notification-container') || document.body;
+  container.appendChild(notification);
+  
   setTimeout(() => {
     notification.style.transform = 'translateY(0)';
     notification.style.opacity = '1';
   }, 10);
+  
   setTimeout(() => {
     notification.style.transform = 'translateY(-100%)';
     notification.style.opacity = '0';
     setTimeout(() => {
-      document.body.removeChild(notification);
+      container.removeChild(notification);
     }, 300);
   }, 3000);
 };
 
-// CSS untuk notifikasi
-const notificationStyle = document.createElement('style');
-notificationStyle.innerHTML = `
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem;
-    border-radius: 12px;
-    background: var(--solana-card);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    z-index: 1000;
-    transform: translateY(-100%);
-    opacity: 0;
-    transition: all 0.3s ease;
-  }
-  .notification.success {
-    border-left: 4px solid var(--solana-success);
-  }
-  .notification.error {
-    border-left: 4px solid var(--solana-danger);
-  }
-  .notification-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(0, 255, 163, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: var(--solana-success);
-  }
-  .notification.error .notification-icon {
-    background: rgba(255, 77, 77, 0.1);
-    color: var(--solana-danger);
-  }
-`;
-document.head.appendChild(notificationStyle);
+// ✅ Pindahkan inisialisasi style notifikasi ke fungsi terpisah
+const initNotificationStyle = () => {
+  if (document.getElementById('notification-styles')) return;
+  
+  const style = document.createElement('style');
+  style.id = 'notification-styles';
+  style.innerHTML = `
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: var(--solana-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 1000;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .notification.success {
+      border-left: 4px solid var(--solana-success);
+    }
+    .notification.error {
+      border-left: 4px solid var(--solana-danger);
+    }
+    .notification-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0, 255, 163, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: var(--solana-success);
+    }
+    .notification.error .notification-icon {
+      background: rgba(255, 77, 77, 0.1);
+      color: var(--solana-danger);
+    }
+  `;
+  document.head.appendChild(style);
+};
+
+// Panggil fungsi inisialisasi notifikasi
+initNotificationStyle();
