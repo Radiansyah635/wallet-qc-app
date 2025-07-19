@@ -37,17 +37,11 @@ export const animateIn = (element) => {
 export const initAuthState = () => {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      // User is signed in
       document.body.classList.add('authenticated');
       document.body.classList.remove('unauthenticated');
-      
-      // Load user data
       loadUserData(user.uid);
-      
-      // Tampilkan dashboard sesuai role
       checkUserRole(user.uid);
     } else {
-      // User is signed out
       document.body.classList.add('unauthenticated');
       document.body.classList.remove('authenticated');
       loadComponent('login');
@@ -59,35 +53,28 @@ export const initAuthState = () => {
 export const loadComponent = async (componentName) => {
   try {
     const appElement = document.getElementById('app');
-    
+
     // Animasi keluar
     appElement.style.opacity = '0';
     appElement.style.transform = 'translateY(-20px)';
-    
-    // Tunggu animasi selesai
     await new Promise(resolve => setTimeout(resolve, 300));
-    
-    // Load komponen HTML
+
+    // ✅ Ganti ke path relatif untuk GitHub Pages
     const response = await fetch(`components/${componentName}.html`);
     const html = await response.text();
-    
-    // Set HTML baru
+
     appElement.innerHTML = html;
-    
-    // Animasi masuk
     animateIn(appElement);
-    
-    // Load JS terkait
-    const scriptPath = `/js/${componentName}.js`;
+
+    // ✅ Ganti path absolut menjadi relatif
+    const scriptPath = `./js/${componentName}.js`;
     try {
       const module = await import(scriptPath);
-      if (module.init) {
-        module.init();
-      }
+      if (module.init) module.init();
     } catch (error) {
       console.log(`No JS module for ${componentName}:`, error);
     }
-    
+
     return true;
   } catch (error) {
     console.error('Error loading component:', error);
@@ -124,16 +111,11 @@ export const showNotification = (message, type = 'success') => {
     </div>
     <div class="notification-content">${message}</div>
   `;
-  
   document.body.appendChild(notification);
-  
-  // Animasi masuk
   setTimeout(() => {
     notification.style.transform = 'translateY(0)';
     notification.style.opacity = '1';
   }, 10);
-  
-  // Hapus setelah 3 detik
   setTimeout(() => {
     notification.style.transform = 'translateY(-100%)';
     notification.style.opacity = '0';
@@ -163,15 +145,12 @@ notificationStyle.innerHTML = `
     opacity: 0;
     transition: all 0.3s ease;
   }
-  
   .notification.success {
     border-left: 4px solid var(--solana-success);
   }
-  
   .notification.error {
     border-left: 4px solid var(--solana-danger);
   }
-  
   .notification-icon {
     width: 32px;
     height: 32px;
@@ -183,7 +162,6 @@ notificationStyle.innerHTML = `
     font-weight: bold;
     color: var(--solana-success);
   }
-  
   .notification.error .notification-icon {
     background: rgba(255, 77, 77, 0.1);
     color: var(--solana-danger);
