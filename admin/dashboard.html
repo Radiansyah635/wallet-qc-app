@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Admin - Kas App</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="admin.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Dashboard Admin</h1>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Data User Terdaftar</h2>
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Total Kas</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data dari Firebase -->
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Total Kas Keseluruhan: <span id="totalKas">Rp0</span></h2>
+    </section>
+  </main>
+</body>
+</html>
