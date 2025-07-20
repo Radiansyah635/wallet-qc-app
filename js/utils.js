@@ -1,194 +1,77 @@
-// Format mata uang Rupiah
-export const formatRupiah = (amount) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0
-  }).format(amount);
-};
+// js/utils.js
 
-// Format tanggal Indonesia
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const options = { 
-    weekday: 'long', 
-    day: 'numeric', 
-    month: 'long', 
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  };
-  return new Intl.DateTimeFormat('id-ID', options).format(date);
-};
+// Variabel global untuk pesan toast
+const messageToast = document.getElementById('message-toast');
 
-// Animasi masuk komponen
-export const animateIn = (element) => {
-  element.style.opacity = '0';
-  element.style.transform = 'translateY(20px)';
-  
-  setTimeout(() => {
-    element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    element.style.opacity = '1';
-    element.style.transform = 'translateY(0)';
-  }, 50);
-};
-
-// Deteksi perubahan auth state
-export const initAuthState = () => {
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      document.body.classList.add('authenticated');
-      document.body.classList.remove('unauthenticated');
-      loadUserData(user.uid);
-      checkUserRole(user.uid);
-    } else {
-      document.body.classList.add('unauthenticated');
-      document.body.classList.remove('authenticated');
-      loadComponent('login');
-    }
-  });
-};
-
-// ✅ PERBAIKAN UTAMA: Fungsi resolvePath untuk GitHub Pages
-const resolvePath = (path) => {
-  // Deteksi jika di GitHub Pages
-  const isGitHubPages = window.location.hostname === 'radiansyah635.github.io';
-  
-  if (isGitHubPages) {
-    return `/wallet-qc-app/${path.replace(/^\//, '')}`;
-  }
-  return `/${path.replace(/^\//, '')}`;
-};
-
-// Load komponen secara dinamis
-export const loadComponent = async (componentName) => {
-  try {
-    const appElement = document.getElementById('app');
-
-    // Animasi keluar
-    appElement.style.opacity = '0';
-    appElement.style.transform = 'translateY(-20px)';
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // ✅ Gunakan resolvePath untuk komponen HTML
-    const response = await fetch(resolvePath(`components/${componentName}.html`));
-    const html = await response.text();
-
-    appElement.innerHTML = html;
-    animateIn(appElement);
-
-    // ✅ Gunakan resolvePath untuk modul JavaScript
-    const scriptPath = resolvePath(`js/${componentName}.js`);
-    try {
-      const module = await import(scriptPath);
-      if (module.init) module.init();
-    } catch (error) {
-      console.log(`No JS module for ${componentName}:`, error);
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Error loading component:', error);
-    document.getElementById('app').innerHTML = `
-      <div class="card">
-        <h2 class="text-danger">Error</h2>
-        <p>Gagal memuat komponen: ${componentName}</p>
-        <button class="btn-solana" onclick="location.reload()">Muat Ulang</button>
-      </div>
-    `;
-    return false;
-  }
-};
-
-// Generate QR Code
-export const generateQR = (elementId, data) => {
-  return new QRCode(document.getElementById(elementId), {
-    text: data,
-    width: 200,
-    height: 200,
-    colorDark: "#00ffa3",
-    colorLight: "transparent",
-    correctLevel: QRCode.CorrectLevel.H
-  });
-};
-
-// Notifikasi
-export const showNotification = (message, type = 'success') => {
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  notification.innerHTML = `
-    <div class="notification-icon">
-      ${type === 'success' ? '✓' : '⚠'}
-    </div>
-    <div class="notification-content">${message}</div>
-  `;
-  
-  // Tambahkan ke container khusus
-  const container = document.getElementById('notification-container') || document.body;
-  container.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.style.transform = 'translateY(0)';
-    notification.style.opacity = '1';
-  }, 10);
-  
-  setTimeout(() => {
-    notification.style.transform = 'translateY(-100%)';
-    notification.style.opacity = '0';
+// Fungsi untuk menampilkan pesan error
+function showError(message) {
+    messageToast.textContent = message;
+    messageToast.classList.remove('hidden', 'bg-green-600', 'bg-blue-600');
+    messageToast.classList.add('bg-red-600'); // Menggunakan kelas Tailwind yang mungkin di-override oleh Solana CSS
     setTimeout(() => {
-      container.removeChild(notification);
-    }, 300);
-  }, 3000);
-};
+        messageToast.classList.add('hidden');
+    }, 5000);
+}
 
-// ✅ Pindahkan inisialisasi style notifikasi ke fungsi terpisah
-const initNotificationStyle = () => {
-  if (document.getElementById('notification-styles')) return;
-  
-  const style = document.createElement('style');
-  style.id = 'notification-styles';
-  style.innerHTML = `
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 1rem;
-      border-radius: 12px;
-      background: var(--solana-card);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      z-index: 1000;
-      transform: translateY(-100%);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-    .notification.success {
-      border-left: 4px solid var(--solana-success);
-    }
-    .notification.error {
-      border-left: 4px solid var(--solana-danger);
-    }
-    .notification-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(0, 255, 163, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: var(--solana-success);
-    }
-    .notification.error .notification-icon {
-      background: rgba(255, 77, 77, 0.1);
-      color: var(--solana-danger);
-    }
-  `;
-  document.head.appendChild(style);
-};
+// Fungsi untuk menampilkan pesan sukses
+function showSuccess(message) {
+    messageToast.textContent = message;
+    messageToast.classList.remove('hidden', 'bg-red-600', 'bg-blue-600');
+    messageToast.classList.add('bg-green-600'); // Menggunakan kelas Tailwind yang mungkin di-override oleh Solana CSS
+    setTimeout(() => {
+        messageToast.classList.add('hidden');
+    }, 5000);
+}
 
-// Panggil fungsi inisialisasi notifikasi
-initNotificationStyle();
+// Fungsi untuk menampilkan pesan informasi
+function showInfo(message) {
+    messageToast.textContent = message;
+    messageToast.classList.remove('hidden', 'bg-red-600', 'bg-green-600');
+    messageToast.classList.add('bg-blue-600'); // Menggunakan kelas Tailwind yang mungkin di-override oleh Solana CSS
+    setTimeout(() => {
+        messageToast.classList.add('hidden');
+    }, 5000);
+}
+
+// Fungsi untuk format angka ke Rupiah
+function formatRupiah(number) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+    }).format(number);
+}
+
+// Fungsi untuk mengatur perilaku modal
+// Catatan: Fungsi ini mencari elemen berdasarkan ID, pastikan ID di HTML sudah benar.
+function setupModal(modalId, openButtonId, closeButtonId, formId) {
+    const modal = document.getElementById(modalId);
+    const openButton = document.getElementById(openButtonId);
+    const closeButton = document.getElementById(closeButtonId);
+    const form = document.getElementById(formId);
+
+    if (openButton) {
+        openButton.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+    }
+
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            if (form) {
+                form.reset(); // Reset form saat modal ditutup
+            }
+        });
+    }
+
+    // Tutup modal jika klik di luar konten
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+            if (form) {
+                form.reset();
+            }
+        }
+    });
+}
