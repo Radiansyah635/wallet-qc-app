@@ -3,12 +3,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "API_KEY_KAMU",
-  authDomain: "PROJEK.firebaseapp.com",
-  projectId: "PROJEK_ID",
-  storageBucket: "PROJEK.appspot.com",
-  messagingSenderId: "XXXXXX",
-  appId: "APP_ID"
+  apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
+  authDomain: "wallet-qc-local-storage.firebaseapp.com",
+  projectId: "wallet-qc-local-storage",
+  storageBucket: "wallet-qc-local-storage.appspot.com",
+  messagingSenderId: "443546801664",
+  appId: "1:443546801664:web:d520fd8d2f311edd20aae5"
 };
 
 const app = initializeApp(firebaseConfig);
