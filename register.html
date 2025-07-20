@@ -3,19 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register - Wallet QC</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Daftar Akun - Wallet QC</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <div class="register-container">
-    <h1>Daftar Akun</h1>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-lg p-8 rounded-lg w-full max-w-sm">
+    <h2 class="text-2xl font-bold mb-6 text-center text-indigo-600">Daftar Akun</h2>
+
     <form id="registerForm" class="space-y-4">
-      <input type="text" id="name" placeholder="Nama Lengkap" required />
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Daftar</button>
+      <input type="text" id="name" placeholder="Nama Lengkap" required class="w-full px-4 py-2 border rounded-md" />
+      <input type="email" id="email" placeholder="Email" required class="w-full px-4 py-2 border rounded-md" />
+      <input type="password" id="password" placeholder="Password" required class="w-full px-4 py-2 border rounded-md" />
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700">Daftar</button>
     </form>
-    <p>Sudah punya akun? <a href="index.html">Login di sini</a></p>
+
+    <p class="mt-4 text-center text-sm text-gray-600">Sudah punya akun?
+      <a href="index.html" class="text-indigo-600 hover:underline">Login di sini</a>
+    </p>
+
+    <p id="message" class="mt-4 text-center text-sm text-red-500"></p>
   </div>
 
   <script type="module" src="./js/register.js"></script>
