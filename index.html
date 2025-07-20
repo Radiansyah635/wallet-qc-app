@@ -1,87 +1,27 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallet QC - Financial Management</title>
-  
-  <!-- Firebase SDKs (using modern modular version) -->
-  <script type="module">
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
-      authDomain: "wallet-qc-local-storage.firebaseapp.com",
-      databaseURL: "https://wallet-qc-local-storage-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "wallet-qc-local-storage",
-      storageBucket: "wallet-qc-local-storage.firebasestorage.app",
-      messagingSenderId: "443546801664",
-      appId: "1:443546801664:web:d520fd8d2f311edd20aae5",
-      measurementId: "G-KVKSD7ES9P"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-    const analytics = getAnalytics(app);
-
-    // Make Firebase available globally (optional, better to use imports in modules)
-    window.firebase = { auth, db, storage, analytics };
-    
-    console.log("Firebase initialized successfully");
-  </script>
-
-  <!-- Tailwind CSS (production CDN as fallback) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#9945FF',
-            secondary: '#14F195',
-            dark: '#0F0F1A',
-          }
-        }
-      }
-    }
-  </script>
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
-  <!-- jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.autotable.min.js"></script>
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register Kas App</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-<body class="min-h-screen flex flex-col">
-  <!-- [Rest of your HTML content remains exactly the same] -->
-  
-  <!-- JavaScript Files -->
-  <!-- Load utils first as other files may depend on them -->
-  <script src="js/utils.js"></script>
-  
-  <!-- Then load auth, firestore, etc. -->
-  <script src="js/auth.js" type="module"></script>
-  <script src="js/firestore.js" type="module"></script>
-  <script src="js/charts.js"></script>
-  
-  <!-- Main app logic last -->
-  <script src="js/main.js" type="module"></script>
+  <div class="bg-white shadow-lg p-8 rounded-lg w-full max-w-sm">
+    <h2 class="text-2xl font-bold mb-6 text-center text-indigo-600">Daftar Akun</h2>
+    
+    <form id="registerForm" class="space-y-4">
+      <input type="email" id="email" placeholder="Email" required class="w-full px-4 py-2 border rounded-md">
+      <input type="password" id="password" placeholder="Password" required class="w-full px-4 py-2 border rounded-md">
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700">Daftar</button>
+    </form>
+
+    <p id="message" class="mt-4 text-center text-sm text-red-500"></p>
+  </div>
+
+  <!-- Script register -->
+  <script type="module" src="./register.js"></script>
 </body>
 </html>
