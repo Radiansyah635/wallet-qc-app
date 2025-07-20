@@ -1,27 +1,18 @@
-// js/firebaseConfig.js
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-// Konfigurasi Firebase Anda
-// GANTI DENGAN KODE KONFIGURASI PROYEK FIREBASE ANDA SENDIRI!
-// Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
-          authDomain: "wallet-qc-local-storage.firebaseapp.com",
-          projectId: "wallet-qc-local-storage",
-          storageBucket: "wallet-qc-local-storage.appspot.com",
-          messagingSenderId: "443546801664",
-          appId: "1:443546801664:web:6d0342e1b8261dd920aae5",
+const firebaseConfig = {
+  apiKey: "AIzaSyYourApiKey123",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-bucket.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef123456"
 };
 
-// Inisialisasi Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Inisialisasi layanan Firebase
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
-
-// Ekspor instance Firebase untuk digunakan di file lain (jika menggunakan modul ES6)
-// Untuk saat ini, karena kita menggunakan script biasa di HTML, variabel ini akan global.
-// Namun, jika Anda berencana menggunakan import/export di masa depan,
-// Anda bisa menambahkan baris ini:
-// export { auth, db, storage };
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
