@@ -2,8 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Admin - Kas App</title>
+  <title>Dashboard Admin</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="admin.js" defer></script>
 </head>
 <body>
@@ -14,7 +15,7 @@
 
   <main>
     <section>
-      <h2>Data User Terdaftar</h2>
+      <h2>Data User</h2>
       <table id="userTable">
         <thead>
           <tr>
@@ -24,13 +25,27 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Data dari Firebase -->
+          <!-- Diisi oleh JS -->
         </tbody>
       </table>
     </section>
 
+    <section id="formSection" class="hidden">
+      <h3>Tambah Transaksi untuk <span id="selectedUserEmail"></span></h3>
+      <form id="transaksiForm">
+        <input type="number" id="jumlah" placeholder="Jumlah (Rp)" required />
+        <select id="jenis">
+          <option value="masuk">Kas Masuk</option>
+          <option value="keluar">Kas Keluar</option>
+        </select>
+        <input type="text" id="keterangan" placeholder="Keterangan" />
+        <button type="submit">Simpan</button>
+      </form>
+    </section>
+
     <section>
-      <h2>Total Kas Keseluruhan: <span id="totalKas">Rp0</span></h2>
+      <h2>Grafik Kas Keseluruhan</h2>
+      <canvas id="grafikKas" width="400" height="200"></canvas>
     </section>
   </main>
 </body>
