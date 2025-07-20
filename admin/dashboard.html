@@ -29,19 +29,22 @@
         </tbody>
       </table>
     </section>
-
-    <section id="formSection" class="hidden">
-      <h3>Tambah Transaksi untuk <span id="selectedUserEmail"></span></h3>
-      <form id="transaksiForm">
-        <input type="number" id="jumlah" placeholder="Jumlah (Rp)" required />
-        <select id="jenis">
-          <option value="masuk">Kas Masuk</option>
-          <option value="keluar">Kas Keluar</option>
-        </select>
-        <input type="text" id="keterangan" placeholder="Keterangan" />
-        <button type="submit">Simpan</button>
-      </form>
-    </section>
+    
+    <section class="mt-6">
+  <h2>Input Transaksi</h2>
+  <form id="transaksiForm" class="grid gap-4 max-w-md p-4 border rounded bg-white">
+    <select id="userSelect" required class="p-2 border rounded">
+      <option value="">Pilih User</option>
+    </select>
+    <select id="tipeTransaksi" required class="p-2 border rounded">
+      <option value="masuk">Kas Masuk</option>
+      <option value="keluar">Kas Keluar</option>
+    </select>
+    <input type="number" id="jumlahTransaksi" placeholder="Jumlah" required class="p-2 border rounded" />
+    <input type="text" id="deskripsiTransaksi" placeholder="Deskripsi" class="p-2 border rounded" />
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Kirim</button>
+  </form>
+</section>
 
     <section>
       <h2>Grafik Kas Keseluruhan</h2>
