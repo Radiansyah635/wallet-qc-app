@@ -1,685 +1,128 @@
-/* css/style.css */
-
-/* ===== VARIABLES ===== */
+/* === VARIABLES SOLANA THEME === */
 :root {
-  /* Solana Color Palette */
-  --solana-bg: #0a0a0a;
-  --solana-card: #161616;
-  --solana-card-hover: #1e1e1e;
-  --solana-primary: #00ffa3;
-  --solana-secondary: #9945ff;
-  --solana-accent: #14f195;
-  --solana-blue: #03e1ff;
-  --solana-purple: #ad1fff;
-  --solana-text: #ffffff;
-  --solana-text-secondary: #b0b0b0;
-  --solana-success: #00ffa3;
-  --solana-danger: #ff4d4d;
-  --solana-warning: #ffb800;
+  /* Warna Primer */
+  --solana-purple: #9945FF;
+  --solana-blue: #14F195;
+  --solana-dark: #0F0F1A;
+  --solana-darker: #07070F;
+  --solana-light: #E0D6FF;
   
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--solana-primary), var(--solana-accent));
-  --gradient-secondary: linear-gradient(135deg, var(--solana-secondary), var(--solana-purple));
+  /* Gradien Khas Solana */
+  --gradient-solana: linear-gradient(135deg, var(--solana-purple) 0%, var(--solana-blue) 100%);
+  --gradient-card: linear-gradient(152deg, rgba(25, 25, 40, 0.8) 0%, rgba(10, 10, 20, 0.9) 100%);
   
-  /* Shadows */
-  --shadow-neon: 0 0 15px rgba(0, 255, 163, 0.5);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.36);
+  /* Efek Glassmorphism */
+  --glass-bg: rgba(20, 20, 40, 0.7);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* ===== BASE STYLES ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
-}
-
+/* === BASE STYLES === */
 body {
-  background: var(--solana-bg);
-  color: var(--solana-text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-image: 
-    radial-gradient(at 27% 37%, rgba(25, 25, 25, 0.5) 0, transparent 50%),
-    radial-gradient(at 97% 21%, rgba(25, 25, 25, 0.3) 0, transparent 50%),
-    radial-gradient(at 52% 99%, rgba(25, 25, 25, 0.4) 0, transparent 50%);
-  position: relative;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(25, 25, 25, 0.2) 0%,
-    var(--solana-bg) 100%
-  );
-  z-index: -1;
-}
-
-/* Gaya untuk mencegah teks memilih saat menekan tombol tertentu (dari Tailwind) */
-.no-select {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-/* ===== TYPOGRAPHY ===== */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-}
-
-h1 {
-  font-size: 2.5rem;
-  background: linear-gradient(90deg, var(--solana-primary), var(--solana-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px rgba(0, 255, 163, 0.2);
-}
-
-h2 {
-  font-size: 1.8rem;
-  color: var(--solana-primary);
-}
-
-h3 {
-  font-size: 1.4rem;
-  color: var(--solana-text);
-}
-
-p {
-  color: var(--solana-text-secondary);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-/* ===== LAYOUT COMPONENTS ===== */
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.grid {
-  display: grid;
-  gap: 2rem;
-}
-
-.grid-2 {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.grid-3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.grid-4 {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.flex {
-  display: flex;
-}
-
-.flex-center {
-  align-items: center;
-  justify-content: center;
-}
-
-/* ===== CARDS ===== */
-.card {
-  background: var(--solana-card);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  transition: all 0.4s ease;
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  position: relative;
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-primary);
-  opacity: 0.7;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(0, 255, 163, 0.2);
-  box-shadow: 0 12px 40px rgba(0, 255, 163, 0.15);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(0, 255, 163, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: var(--solana-primary);
-}
-
-/* ===== BUTTONS ===== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1.8rem;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
-  position: relative;
-  overflow: hidden;
-  font-size: 1rem;
-}
-
-.btn-solana {
-  background: var(--gradient-primary);
-  color: #000 !important;
-  box-shadow: 0 4px 20px rgba(0, 255, 163, 0.3);
-}
-
-.btn-solana:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(0, 255, 163, 0.5);
-}
-
-.btn-solana:active {
-  transform: translateY(1px);
-}
-
-.btn-solana::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: 0.5s;
-}
-
-.btn-solana:hover::after {
-  left: 100%;
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--solana-text);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.btn-icon {
-  margin-right: 0.5rem;
-}
-
-/* Gaya untuk tombol umum yang sebelumnya menggunakan Tailwind classes */
-/* Akan menimpa beberapa gaya dasar Tailwind, namun pastikan konsisten */
-.bg-blue-500 { background-color: var(--solana-primary); color: #000; }
-.hover\:bg-blue-600:hover { background-color: var(--solana-accent); }
-.bg-green-500 { background-color: var(--solana-success); color: #000; }
-.hover\:bg-green-600:hover { background-color: darken(var(--solana-success), 10%); } /* Perlu fungsi darken jika bukan preprocessor CSS */
-.bg-red-500 { background-color: var(--solana-danger); color: #FFF; }
-.hover\:bg-red-600:hover { background-color: darken(var(--solana-danger), 10%); }
-.bg-purple-500 { background-color: var(--solana-secondary); color: #FFF; }
-.hover\:bg-purple-600:hover { background-color: var(--solana-purple); }
-.bg-yellow-500 { background-color: var(--solana-warning); color: #000; }
-.hover\:bg-yellow-600:hover { background-color: darken(var(--solana-warning), 10%); }
-.bg-gray-500 { background-color: var(--solana-text-secondary); color: #FFF; }
-.hover\:bg-gray-600:hover { background-color: darken(var(--solana-text-secondary), 10%); }
-
-/* Untuk elemen dengan background-color yang spesifik dari Tailwind */
-.bg-white { background-color: var(--solana-card); color: var(--solana-text); }
-.bg-gray-100 { background-color: var(--solana-bg); }
-.text-gray-800 { color: var(--solana-text); }
-.text-gray-700 { color: var(--solana-text-secondary); }
-.text-gray-600 { color: var(--solana-text-secondary); }
-
-/* Card specific overrides for the new design */
-.bg-emerald-100 { background-color: rgba(0, 255, 163, 0.1); }
-.text-green-700 { color: var(--solana-success); }
-.text-green-600 { color: var(--solana-success); }
-.bg-red-100 { background-color: rgba(255, 77, 77, 0.1); }
-.text-red-700 { color: var(--solana-danger); }
-.text-red-600 { color: var(--solana-danger); }
-.bg-blue-100 { background-color: rgba(3, 225, 255, 0.1); }
-.text-blue-700 { color: var(--solana-blue); }
-.text-blue-600 { color: var(--solana-blue); }
-
-
-/* ===== NAVIGATION ===== */
-.nav-solana {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.nav-logo {
-  font-size: 1.8rem;
-  font-weight: 800;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.nav-menu {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.nav-item {
-  color: var(--solana-text-secondary);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  position: relative;
-}
-
-.nav-item:hover {
-  color: var(--solana-primary);
-}
-
-.nav-item.active {
-  color: var(--solana-primary);
-  background: rgba(0, 255, 163, 0.1);
-}
-
-.nav-item.active::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--solana-primary);
-  box-shadow: 0 0 10px var(--solana-primary);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--solana-primary);
-  box-shadow: var(--shadow-neon);
-}
-
-/* ===== BALANCE DISPLAY ===== */
-.balance-container {
-  text-align: center;
-  margin: 2rem 0;
-}
-
-.balance-display {
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin: 1rem 0;
-  background: linear-gradient(90deg, var(--solana-primary), var(--solana-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 15px rgba(0, 255, 163, 0.3);
-}
-
-.balance-label {
-  color: var(--solana-text-secondary);
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-/* ===== TRANSACTION HISTORY ===== */
-.transaction-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.transaction-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 16px;
-  background: rgba(30, 30, 30, 0.5);
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
-}
-
-.transaction-item:hover {
-  background: rgba(40, 40, 40, 0.6);
-  border-color: rgba(0, 255, 163, 0.1);
-}
-
-.transaction-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(0, 255, 163, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: var(--solana-primary);
-  margin-right: 1rem;
-}
-
-.transaction-details {
-  flex: 1;
-}
-
-.transaction-title {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.transaction-date {
-  color: var(--solana-text-secondary);
-  font-size: 0.9rem;
-}
-
-.transaction-amount {
-  font-weight: 700;
-  font-size: 1.2rem;
-}
-
-.positive {
-  color: var(--solana-success);
-}
-
-.negative {
-  color: var(--solana-danger);
-}
-
-/* ===== GRAPHICS ===== */
-.chart-container {
-  position: relative;
-  height: 300px;
-  width: 100%;
-  margin-top: 1.5rem;
-}
-
-/* ===== AGENDA STYLES ===== */
-.agenda-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.agenda-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.agenda-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: var(--solana-secondary);
+  background-color: var(--solana-darker);
   color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  z-index: 2;
-}
-
-.agenda-date {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  font-weight: 700;
-  z-index: 2;
-}
-
-.agenda-content {
-  padding: 1.5rem;
-}
-
-.agenda-title {
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
-}
-
-.agenda-meta {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  color: var(--solana-text-secondary);
-}
-
-.agenda-attachment {
-  display: flex;
-  align-items: center;
-  color: var(--solana-primary);
-  font-weight: 500;
-}
-
-/* ===== SOCIAL MEDIA ===== */
-.post-card {
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 20px;
-  background: rgba(30, 30, 30, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.post-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.post-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 1rem;
-  border: 2px solid var(--solana-primary);
-}
-
-.post-author {
-  font-weight: 600;
-}
-
-.post-time {
-  color: var(--solana-text-secondary);
-  font-size: 0.9rem;
-}
-
-.post-content {
-  margin-bottom: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
 }
 
-.post-image {
-  width: 100%;
+/* === UTILITY CLASSES === */
+.gradient-text {
+  background: var(--gradient-solana);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.solana-card {
+  background: var(--gradient-card);
+  backdrop-filter: blur(12px);
+  border: var(--glass-border);
   border-radius: 16px;
-  margin-bottom: 1rem;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease;
 }
 
-.post-actions {
-  display: flex;
-  gap: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 1rem;
+.solana-card:hover {
+  transform: translateY(-4px);
 }
 
-.post-action {
-  display: flex;
-  align-items: center;
-  color: var(--solana-text-secondary);
+.btn-primary {
+  background: var(--gradient-solana);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.post-action:hover {
-  color: var(--solana-primary);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(153, 69, 255, 0.4);
 }
 
-/* ===== FORM ELEMENTS ===== */
-.form-group {
-  margin-bottom: 1.5rem;
+/* === COMPONENT STYLES === */
+/* Header */
+header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
 }
 
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--solana-text);
-  font-weight: 500;
-}
-
-.form-input {
-  width: 100%;
-  padding: 1rem;
-  border-radius: 12px;
-  background: rgba(30, 30, 30, 0.7);
+/* Form Elements */
+.input-field {
+  background: rgba(30, 30, 50, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--solana-text);
-  font-size: 1rem;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: white;
+  width: 100%;
   transition: all 0.3s ease;
 }
 
-.form-input:focus {
-  border-color: var(--solana-primary);
+.input-field:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 255, 163, 0.2);
+  border-color: var(--solana-purple);
+  box-shadow: 0 0 0 2px rgba(153, 69, 255, 0.3);
 }
 
-.form-textarea {
-  min-height: 150px;
-  resize: vertical;
+/* Transaction Cards */
+.transaction-card {
+  background: rgba(30, 30, 50, 0.5);
+  border-left: 4px solid var(--solana-purple);
 }
 
-.form-select {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300ffa3' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E") no-repeat right 1rem center/1rem;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+.income-badge {
+  background: rgba(20, 241, 149, 0.15);
+  color: var(--solana-blue);
 }
 
-/* ===== UTILITY CLASSES ===== */
-.text-gradient {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.expense-badge {
+  background: rgba(255, 60, 100, 0.15);
+  color: #FF3C64;
 }
 
-.text-success {
-  color: var(--solana-success);
+/* Charts */
+.chart-container {
+  background: rgba(20, 20, 40, 0.5);
+  border-radius: 12px;
+  padding: 1rem;
 }
 
-.text-danger {
-  color: var(--solana-danger);
+/* === ANIMATIONS === */
+@keyframes pulse-solana {
+  0% { box-shadow: 0 0 0 0 rgba(153, 69, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(153, 69, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(153, 69, 255, 0); }
 }
 
-.text-warning {
-  color: var(--solana-warning);
+.pulse-effect {
+  animation: pulse-solana 2s infinite;
 }
 
-.text-center {
-  text-align: center;
-}
-
-.mb-0 {
-  margin-bottom: 0;
-}
-
-.mt-2 {
-  margin-top: 2rem;
-}
-
-.pulse {
-  animation: pulseAnimation 2s infinite;
-}
-
-@keyframes pulseAnimation {
-  0% { box-shadow: 0 0 0 0 rgba(0, 255, 163, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(0, 255, 163, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 255, 163, 0); }
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1024px) {
-  .grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .grid-2, .grid-3, .grid-4 {
-    grid-template-columns: 1fr;
-  }
-  
-  .nav-menu {
-    display: none;
-  }
-  
-  .mobile-menu-btn {
-    display: block;
-  }
-  
-  .balance-display {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 0 1rem;
-  }
-  
-  .card {
-    padding: 1.5rem;
-  }
-  
-  .balance-display {
-    font-size: 2rem;
+/* === DARK MODE TWEAKS === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --solana-light: #AEAEB8;
   }
 }
