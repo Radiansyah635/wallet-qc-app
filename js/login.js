@@ -1,7 +1,9 @@
-// login.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+// Import Firebase Auth dan Firestore
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { app } from "./firebase-config.js"; // Harus pastikan app dari sini cocok dengan firebaseConfig
 
+// Konfigurasi (kalau belum diekspor dari firebase-config.js, pakai ini)
 const firebaseConfig = {
   apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
   authDomain: "wallet-qc-local-storage.firebaseapp.com",
@@ -11,28 +13,31 @@ const firebaseConfig = {
   appId: "1:443546801664:web:d520fd8d2f311edd20aae5"
 };
 
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Jalankan setelah DOM siap
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+// Event listener untuk form login
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Login berhasil
-          alert("Login berhasil!");
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          alert("Email atau password salah");
-          console.error(error);
-        });
-    });
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Ambil role user dari Firestore berdasarkan uid
+    const userDoc = await getDoc(doc(db, "users", uid));
+    const userData = userDoc.data();
+
+    // Arahkan berdasarkan role
+    if (userData && userData.role === "admin") {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "dashboard.html";
+    }
+
+  } catch (error) {
+    alert("Login gagal: " + error.message);
   }
 });
