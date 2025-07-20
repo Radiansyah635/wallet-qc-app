@@ -2,13 +2,14 @@
 
 // Konfigurasi Firebase Anda
 // GANTI DENGAN KODE KONFIGURASI PROYEK FIREBASE ANDA SENDIRI!
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY", // GANTI INI
-    authDomain: "YOUR_AUTH_DOMAIN", // GANTI INI
-    projectId: "YOUR_PROJECT_ID", // GANTI INI
-    storageBucket: "YOUR_STORAGE_BUCKET", // GANTI INI
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // GANTI INI
-    appId: "YOUR_APP_ID" // GANTI INI
+// Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
+          authDomain: "wallet-qc-local-storage.firebaseapp.com",
+          projectId: "wallet-qc-local-storage",
+          storageBucket: "wallet-qc-local-storage.appspot.com",
+          messagingSenderId: "443546801664",
+          appId: "1:443546801664:web:6d0342e1b8261dd920aae5",
 };
 
 // Inisialisasi Firebase
