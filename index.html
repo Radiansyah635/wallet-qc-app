@@ -1,95 +1,357 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QC Wallet App</title>
-
-  <!-- ✅ Path sudah diperbaiki -->
-  <link rel="stylesheet" href="css/style.css" />
-
-  <!-- Firebase SDK v8 -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
-
-  <!-- Library Eksternal -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-
-  <!-- Konfigurasi Firebase -->
-  <script>
-    // Base Path untuk GitHub Pages
-    const isGitHubPages = window.location.hostname === 'radiansyah635.github.io';
-    const basePath = isGitHubPages ? '/wallet-qc-app/' : '/';
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
-      authDomain: "wallet-qc-local-storage.firebaseapp.com",
-      databaseURL: "https://wallet-qc-local-storage-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "wallet-qc-local-storage",
-      storageBucket: "wallet-qc-local-storage.appspot.com",
-      messagingSenderId: "443546801664",
-      appId: "1:443546801664:web:d520fd8d2f311edd20aae5",
-      measurementId: "G-KVKSD7ES9P"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    window.firebase = firebase;
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet QC - Financial Management</title>
   
-  <!-- Utilitas Global -->
-  <script>
-    // Fungsi untuk memperbaiki path berdasarkan environment
-    window.resolvePath = (path) => {
-      return basePath + path.replace(/^\//, '');
-    };
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.autotable.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <div id="app">
-    <div id="loading">Memuat aplikasi...</div>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <div id="auth-section" class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+      
+      <form id="login-form">
+        <div class="mb-4">
+          <label for="login-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+          <input type="email" id="login-email" placeholder="email@example.com" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-6">
+          <label for="login-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+          <input type="password" id="login-password" placeholder="********" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login</button>
+      </form>
+
+      <form id="register-form" class="hidden">
+        <div class="mb-4">
+          <label for="register-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+          <input type="email" id="register-email" placeholder="email@example.com" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="register-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+          <input type="password" id="register-password" placeholder="********" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-6">
+          <label for="register-name" class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap:</label>
+          <input type="text" id="register-name" placeholder="Nama Lengkap Anda" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Register</button>
+      </form>
+      
+      <p class="text-center text-gray-600 text-sm mt-4">
+        Belum punya akun? <a href="#" id="show-register" class="text-blue-500 hover:underline">Daftar sekarang</a>
+        <span id="hide-register" class="hidden">
+          Sudah punya akun? <a href="#" id="show-login" class="text-blue-500 hover:underline">Login</a>
+        </span>
+      </p>
+
+      <form id="admin-login-form" class="hidden mt-4">
+        <h3 class="text-lg font-bold mb-2 text-center text-gray-800">Login Admin</h3>
+        <div class="mb-4">
+            <label for="admin-code" class="block text-gray-700 text-sm font-bold mb-2">Kode Admin:</label>
+            <input type="password" id="admin-code" placeholder="Kode Admin" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <button type="submit" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login sebagai Admin</button>
+      </form>
+
+    </div>
   </div>
 
-  <div id="notification-container"></div>
+  <div id="dashboard-section" class="hidden min-h-screen">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+      <div class="text-xl font-bold text-gray-800">Wallet QC</div>
+      <div class="flex items-center space-x-4">
+        <span id="user-info" class="text-gray-700"></span>
+        <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full">Logout</button>
+      </div>
+    </nav>
 
-  <!-- ✅ Load JS dengan path yang diperbaiki -->
-  <script type="module" src="js/utils.js"></script>
-  
-  <script type="module">
-    import { loadComponent, showNotification } from './js/utils.js';
+    <div class="container mx-auto p-4">
+      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang, <span id="welcome-user-name"></span>!</h2>
+        <p class="text-gray-600">Selamat datang di dashboard manajemen keuangan Anda.</p>
+        <div id="admin-menu" class="hidden mt-4">
+          <h3 class="text-lg font-bold text-gray-800 mb-2">Menu Admin:</h3>
+          <div class="flex flex-wrap gap-2">
+            <button id="show-user-management" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Manajemen Pengguna</button>
+            <button id="show-finance-stats" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Statistik Keuangan</button>
+             <button id="show-transaction-form-button" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">Input Transaksi</button>
+             <button id="show-agenda-section-button" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Agenda</button>
+          </div>
+        </div>
+      </div>
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Inisialisasi Firebase
-      await firebase.auth().onAuthStateChanged(async (user) => {
-        if (user) {
-          try {
-            const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-            if (userDoc.exists) {
-              const userData = userDoc.data();
-              if (userData.role === 'admin') {
-                await loadComponent('admin-panel');
-              } else {
-                await loadComponent('dashboard');
-              }
-            } else {
-              showNotification('Profil pengguna tidak ditemukan', 'error');
-              await loadComponent('login');
-            }
-          } catch (error) {
-            console.error("Error loading user data:", error);
-            showNotification('Terjadi kesalahan saat memuat data pengguna', 'error');
-            await loadComponent('login');
-          }
-        } else {
-          await loadComponent('login');
-        }
-      });
-    });
-  </script>
+      <div id="user-stats-card" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Ringkasan Keuangan Anda</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div class="bg-emerald-100 p-4 rounded-lg shadow">
+                <p class="text-green-700 font-bold">Pemasukan Anda</p>
+                <p id="user-income" class="text-2xl font-bold text-green-600">Rp 0</p>
+            </div>
+            <div class="bg-red-100 p-4 rounded-lg shadow">
+                <p class="text-red-700 font-bold">Pengeluaran Anda</p>
+                <p id="user-expense" class="text-2xl font-bold text-red-600">Rp 0</p>
+            </div>
+            <div class="bg-blue-100 p-4 rounded-lg shadow">
+                <p class="text-blue-700 font-bold">Saldo Anda</p>
+                <p id="user-balance" class="text-2xl font-bold text-blue-600">Rp 0</p>
+            </div>
+        </div>
+      </div>
+
+      <div id="admin-dashboard-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 class="text-lg font-bold text-gray-800">Total Pengguna</h3>
+          <p id="total-users" class="text-3xl font-bold text-blue-600">0</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 class="text-lg font-bold text-gray-800">Total Kas Masuk QC</h3>
+          <p id="total-income" class="text-3xl font-bold text-green-600">Rp 0</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 class="text-lg font-bold text-gray-800">Total Kas Keluar QC</h3>
+          <p id="total-expense" class="text-3xl font-bold text-red-600">Rp 0</p>
+        </div>
+      </div>
+
+      <div id="dashboard-chart-card" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Ringkasan Kas QC</h3>
+        <div class="relative h-64">
+          <canvas id="finance-chart"></canvas>
+        </div>
+      </div>
+
+      <div id="recent-transactions-card" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Transaksi Terakhir</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th class="py-2 px-4 border-b text-left text-gray-600">User</th>
+                <th class="py-2 px-4 border-b text-left text-gray-600">Jenis</th>
+                <th class="py-2 px-4 border-b text-left text-gray-600">Jumlah</th>
+                <th class="py-2 px-4 border-b text-left text-gray-600">Deskripsi</th>
+                <th class="py-2 px-4 border-b text-left text-gray-600">Tanggal</th>
+              </tr>
+            </thead>
+            <tbody id="recent-transactions-body">
+              </tbody>
+          </table>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div id="user-management-section" class="hidden min-h-screen container mx-auto p-4">
+    <button id="back-to-dashboard-um" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4">Kembali ke Dashboard</button>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Manajemen Pengguna</h2>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+      <h3 class="text-xl font-bold mb-4 text-gray-800">Daftar Pengguna</h3>
+      <input type="text" id="user-search-input" placeholder="Cari pengguna..." class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Nama</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Email</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Role</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Pemasukan</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Pengeluaran</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Saldo</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body">
+            </tbody>
+        </table>
+      </div>
+       <button id="download-users-pdf" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Download PDF Pengguna</button>
+    </div>
+  </div>
+
+  <div id="finance-stats-section" class="hidden min-h-screen container mx-auto p-4">
+    <button id="back-to-dashboard-fs" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4">Kembali ke Dashboard</button>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Statistik Keuangan Lengkap</h2>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+      <h3 class="text-xl font-bold mb-4 text-gray-800">Total Kas QC</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <div class="bg-emerald-100 p-4 rounded-lg shadow">
+              <p class="text-green-700 font-bold">Total Pemasukan</p>
+              <p id="full-total-income" class="text-2xl font-bold text-green-600">Rp 0</p>
+          </div>
+          <div class="bg-red-100 p-4 rounded-lg shadow">
+              <p class="text-red-700 font-bold">Total Pengeluaran</p>
+              <p id="full-total-expense" class="text-2xl font-bold text-red-600">Rp 0</p>
+          </div>
+          <div class="bg-blue-100 p-4 rounded-lg shadow">
+              <p class="text-blue-700 font-bold">Total Saldo</p>
+              <p id="full-total-saldo" class="text-2xl font-bold text-blue-600">Rp 0</p>
+          </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h3 class="text-xl font-bold mb-4 text-gray-800">Grafik Kas QC</h3>
+        <div class="relative h-96">
+            <canvas id="full-finance-chart"></canvas>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+      <h3 class="text-xl font-bold mb-4 text-gray-800">Detail Transaksi</h3>
+      <div class="mb-4 flex space-x-2">
+          <input type="date" id="start-date-filter" class="p-2 border rounded">
+          <input type="date" id="end-date-filter" class="p-2 border rounded">
+          <select id="user-filter-select" class="p-2 border rounded">
+              <option value="">Semua User</option>
+          </select>
+          <button id="apply-filter-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Filter</button>
+          <button id="reset-filter-button" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Reset</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b text-left text-gray-600">User</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Jenis</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Jumlah</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Deskripsi</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Tanggal</th>
+              <th class="py-2 px-4 border-b text-left text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="full-transactions-body">
+            </tbody>
+        </table>
+      </div>
+      <button id="download-transactions-pdf" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Download PDF Transaksi</button>
+    </div>
+  </div>
+
+  <div id="transaction-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">Input Transaksi</h2>
+      <form id="transaction-form">
+        <div class="mb-4">
+          <label for="transaction-user" class="block text-gray-700 text-sm font-bold mb-2">Pilih User:</label>
+          <select id="transaction-user" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </select>
+        </div>
+        <div class="mb-4">
+          <label for="transaction-type" class="block text-gray-700 text-sm font-bold mb-2">Jenis Transaksi:</label>
+          <select id="transaction-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <option value="masuk">Kas Masuk</option>
+            <option value="keluar">Kas Keluar</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label for="transaction-amount" class="block text-gray-700 text-sm font-bold mb-2">Jumlah:</label>
+          <input type="number" id="transaction-amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="1" required>
+        </div>
+        <div class="mb-6">
+          <label for="transaction-desc" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi:</label>
+          <textarea id="transaction-desc" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+        </div>
+        <div class="flex justify-end space-x-4">
+          <button type="button" id="cancel-transaction" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Batal</button>
+          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Simpan Transaksi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="edit-transaction-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">Edit Transaksi</h2>
+      <form id="edit-transaction-form">
+        <input type="hidden" id="edit-transaction-id">
+        <div class="mb-4">
+          <label for="edit-transaction-user" class="block text-gray-700 text-sm font-bold mb-2">User:</label>
+          <select id="edit-transaction-user" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
+            </select>
+        </div>
+        <div class="mb-4">
+          <label for="edit-transaction-type" class="block text-gray-700 text-sm font-bold mb-2">Jenis Transaksi:</label>
+          <select id="edit-transaction-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <option value="masuk">Kas Masuk</option>
+            <option value="keluar">Kas Keluar</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label for="edit-transaction-amount" class="block text-gray-700 text-sm font-bold mb-2">Jumlah:</label>
+          <input type="number" id="edit-transaction-amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="1" required>
+        </div>
+        <div class="mb-6">
+          <label for="edit-transaction-desc" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi:</label>
+          <textarea id="edit-transaction-desc" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+        </div>
+        <div class="flex justify-end space-x-4">
+          <button type="button" id="cancel-edit-transaction" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Batal</button>
+          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="agenda-section" class="hidden min-h-screen container mx-auto p-4">
+      <button id="back-to-dashboard-agenda" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4">Kembali ke Dashboard</button>
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">Manajemen Agenda</h2>
+
+      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h3 class="text-xl font-bold mb-4 text-gray-800">Tambah Agenda Baru</h3>
+          <form id="add-agenda-form">
+              <div class="mb-4">
+                  <label for="agenda-title" class="block text-gray-700 text-sm font-bold mb-2">Judul Agenda:</label>
+                  <input type="text" id="agenda-title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+              </div>
+              <div class="mb-4">
+                  <label for="agenda-description" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi:</label>
+                  <textarea id="agenda-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+              </div>
+              <div class="mb-6">
+                  <label for="agenda-date" class="block text-gray-700 text-sm font-bold mb-2">Tanggal:</label>
+                  <input type="date" id="agenda-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+              </div>
+              <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Tambah Agenda</button>
+          </form>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-bold mb-4 text-gray-800">Daftar Agenda</h3>
+          <div id="agenda-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              </div>
+      </div>
+  </div>
+
+  <div id="message-toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+    Pesan Anda di sini!
+  </div>
+
+  <script src="js/firebaseConfig.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/firestore.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/transactions.js"></script>
+  <script src="js/agenda.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/main.js"></script>
+
 </body>
 </html>
