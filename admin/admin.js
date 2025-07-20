@@ -1,83 +1,89 @@
-// admin/admin.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// admin.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  // Ganti dengan konfigurasi Firebase kamu
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_MSG_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
+  authDomain: "wallet-qc-local-storage.firebaseapp.com",
+  projectId: "wallet-qc-local-storage",
+  storageBucket: "wallet-qc-local-storage.appspot.com",
+  messagingSenderId: "443546801664",
+  appId: "1:443546801664:web:d520fd8d2f311edd20aae5",
+  measurementId: "G-KVKSD7ES9P"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const userTable = document.getElementById("userTable").querySelector("tbody");
-const totalKasEl = document.getElementById("totalKas");
-const logoutBtn = document.getElementById("logoutBtn");
+// Mengecek apakah user admin sudah login
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadUserData();
+  } else {
+    window.location.href = "../index.html";
+  }
+});
 
-let totalKasGlobal = 0;
-
-// ⛔ Logout
-logoutBtn.addEventListener("click", () => {
+// Fungsi logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
   signOut(auth).then(() => {
     window.location.href = "../index.html";
   });
 });
 
-// ✅ Cek siapa yang login
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    await loadUserData();
-  } else {
-    window.location.href = "../index.html";
-  }
-});
-
-// 📦 Load data user dan kas dari Firestore
+// Menampilkan data user
 async function loadUserData() {
-  const usersSnapshot = await getDocs(collection(db, "users"));
-  userTable.innerHTML = "";
-  totalKasGlobal = 0;
+  const usersRef = collection(db, "users");
+  const userTableBody = document.querySelector("#userTable tbody");
+  userTableBody.innerHTML = "";
 
-  usersSnapshot.forEach(async (userDoc) => {
-    const userData = userDoc.data();
-    const email = userData.email;
-    const kas = userData.kas || 0;
+  let totalKas = 0;
 
-    totalKasGlobal += kas;
+  const querySnapshot = await getDocs(usersRef);
+  querySnapshot.forEach(async (docSnap) => {
+    const userData = docSnap.data();
+    const row = document.createElement("tr");
 
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${email}</td>
-      <td>Rp${kas.toLocaleString("id-ID")}</td>
-      <td>
-        <button onclick="inputTransaksi('${userDoc.id}', '${email}', ${kas})">+ Transaksi</button>
-      </td>
-    `;
-    userTable.appendChild(tr);
+    const emailCell = document.createElement("td");
+    emailCell.textContent = userData.email || "Tidak ada email";
+    row.appendChild(emailCell);
 
-    totalKasEl.textContent = `Rp${totalKasGlobal.toLocaleString("id-ID")}`;
+    const saldoCell = document.createElement("td");
+    const kas = userData.saldo || 0;
+    saldoCell.textContent = `Rp${kas.toLocaleString("id-ID")}`;
+    row.appendChild(saldoCell);
+
+    const actionCell = document.createElement("td");
+    const inputBtn = document.createElement("button");
+    inputBtn.textContent = "Input Transaksi";
+    inputBtn.addEventListener("click", () => {
+      const nominal = prompt("Masukkan nominal transaksi:");
+      if (nominal && !isNaN(nominal)) {
+        updateUserSaldo(docSnap.id, parseInt(nominal));
+      }
+    });
+    actionCell.appendChild(inputBtn);
+    row.appendChild(actionCell);
+
+    userTableBody.appendChild(row);
+    totalKas += kas;
+
+    // Update total kas
+    document.getElementById("totalKas").textContent = `Rp${totalKas.toLocaleString("id-ID")}`;
   });
 }
 
-// 🧾 Tambah transaksi
-window.inputTransaksi = async function (userId, email, kasLama) {
-  const nominal = prompt(`Masukkan nominal transaksi untuk ${email} (gunakan minus untuk kas keluar):`);
-  const angka = parseInt(nominal);
-
-  if (!isNaN(angka)) {
-    const newKas = kasLama + angka;
-    await updateDoc(doc(db, "users", userId), { kas: newKas });
-
-    alert("Transaksi berhasil.");
+// Update saldo user
+async function updateUserSaldo(userId, nominal) {
+  const userDocRef = doc(db, "users", userId);
+  const userDocSnap = await getDoc(userDocRef);
+  if (userDocSnap.exists()) {
+    const currentSaldo = userDocSnap.data().saldo || 0;
+    const newSaldo = currentSaldo + nominal;
+    await updateDoc(userDocRef, { saldo: newSaldo });
+    alert("Saldo berhasil diperbarui");
     loadUserData();
-  } else {
-    alert("Input tidak valid.");
   }
-};
+}
