@@ -1,7 +1,6 @@
 // Import Firebase Auth dan Firestore
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { app } from "./firebase-config.js"; // Harus pastikan app dari sini cocok dengan firebaseConfig
 
 // Konfigurasi (kalau belum diekspor dari firebase-config.js, pakai ini)
 const firebaseConfig = {
