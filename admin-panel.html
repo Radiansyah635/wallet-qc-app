@@ -1,0 +1,36 @@
+<!-- admin-panel.html -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Panel - Kas App</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+    <h2 class="text-xl font-bold text-indigo-600 mb-4 text-center">Input Transaksi Kas</h2>
+    
+    <form id="formKas" class="space-y-4">
+      <input type="email" id="email" placeholder="Email user" required class="w-full px-4 py-2 border rounded-md" />
+
+      <select id="kategori" required class="w-full px-4 py-2 border rounded-md">
+        <option value="">Pilih Kategori</option>
+        <option value="Pemasukan">Pemasukan</option>
+        <option value="Pengeluaran">Pengeluaran</option>
+      </select>
+
+      <input type="number" id="jumlah" placeholder="Jumlah (Rp)" required class="w-full px-4 py-2 border rounded-md" />
+      
+      <input type="text" id="keterangan" placeholder="Keterangan" class="w-full px-4 py-2 border rounded-md" />
+
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700">Simpan Transaksi</button>
+    </form>
+
+    <p id="pesan" class="mt-4 text-center text-sm text-green-600"></p>
+  </div>
+
+  <script type="module" src="./admin-panel.js"></script>
+</body>
+</html>
