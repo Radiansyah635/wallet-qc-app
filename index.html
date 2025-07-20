@@ -9,7 +9,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -18,339 +17,564 @@
   
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="min-h-screen flex flex-col">
+  <header class="bg-black/80 py-4 px-6 border-b border-purple-900/50 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold gradient-text">Wallet QC</h1>
+      <div id="auth-section" class="flex items-center space-x-4">
+        <span id="user-email" class="text-sm text-gray-300 hidden"></span>
+        <span id="user-role" class="text-xs px-2 py-1 rounded-full bg-purple-600/50 hidden">Member</span>
+        <button id="logout-btn" class="px-4 py-2 bg-red-600/80 hover:bg-red-500/90 rounded-lg text-sm hidden">
+          Logout
+        </button>
+        <button id="login-btn" class="btn-primary">Login</button>
+      </div>
+    </div>
+  </header>
 
-  <div id="auth-section" class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
-      
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <section id="auth-container" class="max-w-md mx-auto solana-card p-8">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold gradient-text mb-2">Selamat Datang</h2>
+        <p class="text-gray-400">Kelola kas tim QC dengan mudah dan aman</p>
+      </div>
+
+      <div class="flex border-b border-gray-800 mb-6">
+        <button id="login-tab" class="flex-1 py-4 font-medium tab-active">
+          Login
+        </button>
+        <button id="register-tab" class="flex-1 py-4 font-medium text-gray-400">
+          Register
+        </button>
+        <button id="reset-tab" class="flex-1 py-4 font-medium text-gray-400">
+          Reset Password
+        </button>
+      </div>
+
       <form id="login-form">
-        <div class="mb-4">
-          <label for="login-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-          <input type="email" id="login-email" placeholder="email@example.com" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <div class="space-y-4">
+          <div>
+            <label for="login-email" class="block text-sm mb-2 text-gray-300">Email</label>
+            <input 
+              type="email" 
+              id="login-email" 
+              required
+              class="input-field"
+              placeholder="email@contoh.com"
+            >
+          </div>
+          <div>
+            <label for="login-password" class="block text-sm mb-2 text-gray-300">Password</label>
+            <input 
+              type="password" 
+              id="login-password" 
+              required
+              class="input-field"
+              placeholder="••••••••"
+            >
+          </div>
+          <button type="submit" class="btn-primary w-full">
+            Masuk
+          </button>
         </div>
-        <div class="mb-6">
-          <label for="login-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-          <input type="password" id="login-password" placeholder="********" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
-        </div>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login</button>
       </form>
 
       <form id="register-form" class="hidden">
-        <div class="mb-4">
-          <label for="register-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-          <input type="email" id="register-email" placeholder="email@example.com" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <div class="space-y-4">
+          <div>
+            <label for="register-name" class="block text-sm mb-2 text-gray-300">Nama Lengkap</label>
+            <input 
+              type="text" 
+              id="register-name" 
+              required
+              class="input-field"
+              placeholder="Nama Anda"
+            >
+          </div>
+          <div>
+            <label for="register-email" class="block text-sm mb-2 text-gray-300">Email</label>
+            <input 
+              type="email" 
+              id="register-email" 
+              required
+              class="input-field"
+              placeholder="email@contoh.com"
+            >
+          </div>
+          <div>
+            <label for="register-password" class="block text-sm mb-2 text-gray-300">Password</label>
+            <input 
+              type="password" 
+              id="register-password" 
+              required
+              class="input-field"
+              placeholder="••••••••"
+            >
+          </div>
+          <div class="hidden" id="admin-code-container">
+            <label for="admin-code" class="block text-sm mb-2 text-gray-300">Kode Admin</label>
+            <input 
+              type="password" 
+              id="admin-code" 
+              class="input-field"
+              placeholder="Masukkan kode admin"
+            >
+          </div>
+          <div class="flex items-center">
+            <input type="checkbox" id="is-admin" class="mr-2">
+            <label for="is-admin" class="text-sm">Daftar sebagai Admin</label>
+          </div>
+          <button type="submit" class="btn-primary w-full">
+            Daftar
+          </button>
         </div>
-        <div class="mb-4">
-          <label for="register-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-          <input type="password" id="register-password" placeholder="********" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-        </div>
-        <div class="mb-6">
-          <label for="register-name" class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap:</label>
-          <input type="text" id="register-name" placeholder="Nama Lengkap Anda" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
-        </div>
-        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Register</button>
       </form>
       
-      <p class="text-center text-gray-600 text-sm mt-4">
-        Belum punya akun? <a href="#" id="show-register" class="text-blue-500 hover:underline">Daftar sekarang</a>
-        <span id="hide-register" class="hidden">
-          Sudah punya akun? <a href="#" id="show-login" class="text-blue-500 hover:underline">Login</a>
-        </span>
-      </p>
-
-      <form id="admin-login-form" class="hidden mt-4">
-        <h3 class="text-lg font-bold mb-2 text-center text-gray-800">Login Admin</h3>
-        <div class="mb-4">
-            <label for="admin-code" class="block text-gray-700 text-sm font-bold mb-2">Kode Admin:</label>
-            <input type="password" id="admin-code" placeholder="Kode Admin" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-        </div>
-        <button type="submit" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login sebagai Admin</button>
-      </form>
-
-    </div>
-  </div>
-
-  <div id="dashboard-section" class="hidden min-h-screen">
-    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-      <div class="text-xl font-bold text-gray-800">Wallet QC</div>
-      <div class="flex items-center space-x-4">
-        <span id="user-info" class="text-gray-700"></span>
-        <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full">Logout</button>
-      </div>
-    </nav>
-
-    <div class="container mx-auto p-4">
-      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang, <span id="welcome-user-name"></span>!</h2>
-        <p class="text-gray-600">Selamat datang di dashboard manajemen keuangan Anda.</p>
-        <div id="admin-menu" class="hidden mt-4">
-          <h3 class="text-lg font-bold text-gray-800 mb-2">Menu Admin:</h3>
-          <div class="flex flex-wrap gap-2">
-            <button id="show-user-management" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Manajemen Pengguna</button>
-            <button id="show-finance-stats" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Statistik Keuangan</button>
-             <button id="show-transaction-form-button" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">Input Transaksi</button>
-             <button id="show-agenda-section-button" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Agenda</button>
+      <form id="reset-form" class="hidden">
+        <div class="space-y-4">
+          <div>
+            <label for="reset-email" class="block text-sm mb-2 text-gray-300">Email</label>
+            <input 
+              type="email" 
+              id="reset-email" 
+              required
+              class="input-field"
+              placeholder="email@contoh.com"
+            >
           </div>
+          <button type="submit" class="btn-primary w-full">
+            Kirim Link Reset Password
+          </button>
         </div>
-      </div>
-
-      <div id="user-stats-card" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Ringkasan Keuangan Anda</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div class="bg-emerald-100 p-4 rounded-lg shadow">
-                <p class="text-green-700 font-bold">Pemasukan Anda</p>
-                <p id="user-income" class="text-2xl font-bold text-green-600">Rp 0</p>
-            </div>
-            <div class="bg-red-100 p-4 rounded-lg shadow">
-                <p class="text-red-700 font-bold">Pengeluaran Anda</p>
-                <p id="user-expense" class="text-2xl font-bold text-red-600">Rp 0</p>
-            </div>
-            <div class="bg-blue-100 p-4 rounded-lg shadow">
-                <p class="text-blue-700 font-bold">Saldo Anda</p>
-                <p id="user-balance" class="text-2xl font-bold text-blue-600">Rp 0</p>
-            </div>
-        </div>
-      </div>
-
-      <div id="admin-dashboard-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <h3 class="text-lg font-bold text-gray-800">Total Pengguna</h3>
-          <p id="total-users" class="text-3xl font-bold text-blue-600">0</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <h3 class="text-lg font-bold text-gray-800">Total Kas Masuk QC</h3>
-          <p id="total-income" class="text-3xl font-bold text-green-600">Rp 0</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <h3 class="text-lg font-bold text-gray-800">Total Kas Keluar QC</h3>
-          <p id="total-expense" class="text-3xl font-bold text-red-600">Rp 0</p>
-        </div>
-      </div>
-
-      <div id="dashboard-chart-card" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Ringkasan Kas QC</h3>
-        <div class="relative h-64">
-          <canvas id="finance-chart"></canvas>
-        </div>
-      </div>
-
-      <div id="recent-transactions-card" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Transaksi Terakhir</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full bg-white">
-            <thead>
-              <tr>
-                <th class="py-2 px-4 border-b text-left text-gray-600">User</th>
-                <th class="py-2 px-4 border-b text-left text-gray-600">Jenis</th>
-                <th class="py-2 px-4 border-b text-left text-gray-600">Jumlah</th>
-                <th class="py-2 px-4 border-b text-left text-gray-600">Deskripsi</th>
-                <th class="py-2 px-4 border-b text-left text-gray-600">Tanggal</th>
-              </tr>
-            </thead>
-            <tbody id="recent-transactions-body">
-              </tbody>
-          </table>
-        </div>
+      </form>
+      
+      <div class="admin-info-box mt-6">
+        <h3>Cara Masuk Sebagai Admin</h3>
+        <ul>
+          <li>Untuk akun yang sudah ada: Gunakan email dan password yang sudah didaftarkan</li>
+          <li>Untuk membuat akun admin baru: Centang "Daftar sebagai Admin" dan masukkan kode admin: <strong>admin123</strong></li>
+          <li>Akun demo admin: <strong>admin@walletqc.com</strong> / password: <strong>admin123</strong></li>
+        </ul>
       </div>
       
-    </div>
-  </div>
+      <div id="error-message" class="mt-4 text-center text-red-400 text-sm hidden"></div>
+      <div id="success-message" class="mt-4 text-center text-green-400 text-sm hidden"></div>
+    </section>
 
-  <div id="user-management-section" class="hidden min-h-screen container mx-auto p-4">
-    <button id="back-to-dashboard-um" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4">Kembali ke Dashboard</button>
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">Manajemen Pengguna</h2>
-
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h3 class="text-xl font-bold mb-4 text-gray-800">Daftar Pengguna</h3>
-      <input type="text" id="user-search-input" placeholder="Cari pengguna..." class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Nama</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Email</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Role</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Pemasukan</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Pengeluaran</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Saldo</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="user-table-body">
-            </tbody>
-        </table>
+    <section id="dashboard" class="hidden">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold gradient-text">Dashboard</h1>
+        <div class="flex space-x-2">
+          <button id="show-full-kas" class="px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg">
+            <i class="fas fa-wallet mr-2"></i> Kas Lengkap
+          </button>
+          <button id="show-full-agenda" class="px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg">
+            <i class="fas fa-calendar-alt mr-2"></i> Agenda Lengkap
+          </button>
+          <button id="show-full-sosial" class="px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg">
+            <i class="fas fa-users mr-2"></i> Sosial Lengkap
+          </button>
+          <button id="show-admin" class="px-4 py-2 bg-purple-600/50 hover:bg-purple-500/50 rounded-lg admin-only">
+            <i class="fas fa-lock mr-2"></i> Admin Panel
+          </button>
+        </div>
       </div>
-       <button id="download-users-pdf" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Download PDF Pengguna</button>
-    </div>
-  </div>
 
-  <div id="finance-stats-section" class="hidden min-h-screen container mx-auto p-4">
-    <button id="back-to-dashboard-fs" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4">Kembali ke Dashboard</button>
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">Statistik Keuangan Lengkap</h2>
+      <div class="dashboard-grid">
+        <div class="dashboard-left">
+          <div class="solana-card p-6 dashboard-profile">
+            <h2 class="text-xl font-semibold mb-4">Profil Saya</h2>
+            <div class="dashboard-card-content">
+              <div class="flex items-center space-x-4 mb-4">
+                <div class="relative">
+                  <div id="profile-avatar" class="user-avatar w-16 h-16 text-xl">
+                    <span id="user-initial">U</span>
+                  </div>
+                  <img id="profile-image" class="absolute inset-0 w-16 h-16 rounded-full object-cover hidden" alt="Profile">
+                </div>
+                <div>
+                  <div class="flex items-center">
+                    <h3 id="user-name" class="font-medium text-lg">User Name</h3>
+                    <span id="role-badge" class="role-badge member-badge">Member</span>
+                  </div>
+                  <p id="user-email-display" class="text-sm text-gray-400">user@email.com</p>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Kas Masuk</span>
+                  <span id="user-income" class="text-green-400 font-medium">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Kas Keluar</span>
+                  <span id="user-expense" class="text-red-400 font-medium">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center pt-2 border-t border-gray-700">
+                  <span class="text-gray-300 font-medium">Saldo</span>
+                  <span id="user-balance" class="text-white font-bold">Rp 0</span>
+                </div>
+              </div>
+              
+              <div class="quick-access-buttons">
+                <button id="quick-add-income" class="quick-access-btn">
+                  <i class="fas fa-plus-circle mr-1"></i> Kas Masuk
+                </button>
+                <button id="quick-add-expense" class="quick-access-btn">
+                  <i class="fas fa-minus-circle mr-1"></i> Kas Keluar
+                </button>
+                <button id="quick-add-post" class="quick-access-btn">
+                  <i class="fas fa-pen mr-1"></i> Posting Baru
+                </button>
+                <button id="quick-setting" class="quick-access-btn">
+                  <i class="fas fa-cog mr-1"></i> Pengaturan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h3 class="text-xl font-bold mb-4 text-gray-800">Total Kas QC</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-          <div class="bg-emerald-100 p-4 rounded-lg shadow">
-              <p class="text-green-700 font-bold">Total Pemasukan</p>
-              <p id="full-total-income" class="text-2xl font-bold text-green-600">Rp 0</p>
+        <div class="dashboard-center">
+          <div class="solana-card p-6 dashboard-balance">
+            <h2 class="text-xl font-semibold mb-4">Total Kas QC</h2>
+            <div class="dashboard-card-content">
+              <p id="total-saldo" class="text-3xl font-bold font-mono mb-4">Rp 0</p>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Total Pemasukan</span>
+                  <span id="total-income" class="text-green-400 font-medium">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Total Pengeluaran</span>
+                  <span id="total-expense" class="text-red-400 font-medium">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Total Anggota</span>
+                  <span id="total-users" class="text-purple-400 font-medium">0</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="bg-red-100 p-4 rounded-lg shadow">
-              <p class="text-red-700 font-bold">Total Pengeluaran</p>
-              <p id="full-total-expense" class="text-2xl font-bold text-red-600">Rp 0</p>
+
+          <div class="solana-card p-6 dashboard-chart">
+            <h2 class="text-xl font-semibold mb-4">Statistik Keuangan</h2>
+            <div class="dashboard-card-content">
+              <div class="chart-container">
+                <canvas id="finance-chart"></canvas>
+              </div>
+            </div>
           </div>
-          <div class="bg-blue-100 p-4 rounded-lg shadow">
-              <p class="text-blue-700 font-bold">Total Saldo</p>
-              <p id="full-total-saldo" class="text-2xl font-bold text-blue-600">Rp 0</p>
+
+          <div class="solana-card p-6 dashboard-transactions">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold">Transaksi Terakhir</h2>
+              <button id="add-transaction-btn" class="btn-primary admin-only">
+                <i class="fas fa-plus mr-2"></i> Tambah Transaksi
+              </button>
+            </div>
+            <div class="dashboard-card-content">
+              <div id="recent-transactions" class="space-y-3">
+                <div class="text-center py-10">
+                  <div class="loading mx-auto"></div>
+                  <p class="mt-3 text-gray-400">Memuat data transaksi...</p>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="dashboard-right">
+          <div class="solana-card p-6 dashboard-agenda">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold">Agenda Mendatang</h2>
+              <button id="add-agenda-btn" class="btn-primary admin-only">
+                <i class="fas fa-plus mr-2"></i> Tambah
+              </button>
+            </div>
+            <div class="dashboard-card-content">
+              <div id="upcoming-agendas" class="space-y-3">
+                <div class="text-center py-10">
+                  <div class="loading mx-auto"></div>
+                  <p class="mt-3 text-gray-400">Memuat agenda...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="solana-card p-6 dashboard-social">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold">Aktivitas Terbaru</h2>
+              <button id="add-post-btn" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i> Posting Baru
+              </button>
+            </div>
+            <div class="dashboard-card-content">
+              <form id="post-form" class="space-y-4 mb-6">
+                <div>
+                  <textarea id="post-content" rows="3" class="input-field" placeholder="Apa yang ingin Anda bagikan hari ini?" required></textarea>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center">
+                    <label for="post-image" class="file-upload-label mr-3">
+                      <span id="image-name-display">Lampirkan Gambar/Video</span>
+                      <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="post-image" accept="image/*,video/*" class="hidden">
+                  </div>
+                  <button type="submit" class="btn-primary">
+                    Posting
+                  </button>
+                </div>
+              </form>
+              
+              <div id="post-attachment-preview-container" class="hidden mt-4">
+                <img id="preview-image" class="attachment-preview w-full" alt="Preview lampiran">
+                <video id="preview-video" class="attachment-preview w-full hidden" controls></video>
+                <button id="remove-attachment" class="mt-2 text-red-400 text-sm">
+                  <i class="fas fa-times mr-1"></i> Hapus lampiran
+                </button>
+              </div>
+
+              <div id="social-feed" class="mt-8 space-y-6 max-h-[600px] overflow-y-auto">
+                <div class="text-center py-10">
+                  <div class="loading mx-auto"></div>
+                  <p class="mt-3 text-gray-400">Memuat postingan...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h3 class="text-xl font-bold mb-4 text-gray-800">Grafik Kas QC</h3>
-        <div class="relative h-96">
+      <section id="full-kas-section" class="solana-card p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold">Kas & Transaksi</h2>
+          <div>
+            <button id="print-transactions" class="px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg mr-2">
+              <i class="fas fa-print mr-1"></i> Cetak PDF
+            </button>
+            <button id="add-transaction-full-btn" class="btn-primary admin-only">
+              <i class="fas fa-plus mr-2"></i> Tambah Transaksi
+            </button>
+          </div>
+        </div>
+        
+        <div class="mb-8">
+          <h3 class="text-lg font-medium mb-4">Statistik Keuangan</h3>
+          <div class="chart-container">
             <canvas id="full-finance-chart"></canvas>
+          </div>
         </div>
-    </div>
+        
+        <form id="transaction-form" class="hidden space-y-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm mb-2">Pilih User</label>
+              <select id="transaction-user" class="input-field admin-only">
+                <option value="">Pilih User</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm mb-2">Jenis Transaksi</label>
+              <select id="transaction-type" class="input-field">
+                <option value="masuk">Kas Masuk</option>
+                <option value="keluar">Kas Keluar</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm mb-2">Jumlah (Rp)</label>
+              <input type="number" id="transaction-amount" class="input-field" placeholder="1000000" required min="1">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm mb-2">Keterangan</label>
+            <input type="text" id="transaction-desc" class="input-field" placeholder="Deskripsi transaksi" required>
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button type="button" id="cancel-transaction-btn" class="px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg">
+              Batal
+            </button>
+            <button type="submit" class="btn-primary">
+              Simpan Transaksi
+            </button>
+          </div>
+        </form>
 
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h3 class="text-xl font-bold mb-4 text-gray-800">Detail Transaksi</h3>
-      <div class="mb-4 flex space-x-2">
-          <input type="date" id="start-date-filter" class="p-2 border rounded">
-          <input type="date" id="end-date-filter" class="p-2 border rounded">
-          <select id="user-filter-select" class="p-2 border rounded">
-              <option value="">Semua User</option>
-          </select>
-          <button id="apply-filter-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Filter</button>
-          <button id="reset-filter-button" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Reset</button>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th class="py-2 px-4 border-b text-left text-gray-600">User</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Jenis</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Jumlah</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Deskripsi</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Tanggal</th>
-              <th class="py-2 px-4 border-b text-left text-gray-600">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="full-transactions-body">
-            </tbody>
-        </table>
-      </div>
-      <button id="download-transactions-pdf" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Download PDF Transaksi</button>
-    </div>
-  </div>
+        <div id="transactions-list" class="space-y-4 max-h-[500px] overflow-y-auto">
+          <div class="text-center py-10">
+            <div class="loading mx-auto"></div>
+            <p class="mt-3 text-gray-400">Memuat data transaksi...</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="full-agenda-section" class="solana-card p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold">Agenda QC</h2>
+          <button id="add-agenda-full-btn" class="btn-primary admin-only">
+            <i class="fas fa-plus mr-2"></i> Tambah Agenda
+          </button>
+        </div>
 
-  <div id="transaction-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-4 text-gray-800">Input Transaksi</h2>
-      <form id="transaction-form">
-        <div class="mb-4">
-          <label for="transaction-user" class="block text-gray-700 text-sm font-bold mb-2">Pilih User:</label>
-          <select id="transaction-user" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </select>
-        </div>
-        <div class="mb-4">
-          <label for="transaction-type" class="block text-gray-700 text-sm font-bold mb-2">Jenis Transaksi:</label>
-          <select id="transaction-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            <option value="masuk">Kas Masuk</option>
-            <option value="keluar">Kas Keluar</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label for="transaction-amount" class="block text-gray-700 text-sm font-bold mb-2">Jumlah:</label>
-          <input type="number" id="transaction-amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="1" required>
-        </div>
-        <div class="mb-6">
-          <label for="transaction-desc" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi:</label>
-          <textarea id="transaction-desc" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
-        </div>
-        <div class="flex justify-end space-x-4">
-          <button type="button" id="cancel-transaction" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Batal</button>
-          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Simpan Transaksi</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="edit-transaction-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-4 text-gray-800">Edit Transaksi</h2>
-      <form id="edit-transaction-form">
-        <input type="hidden" id="edit-transaction-id">
-        <div class="mb-4">
-          <label for="edit-transaction-user" class="block text-gray-700 text-sm font-bold mb-2">User:</label>
-          <select id="edit-transaction-user" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
-            </select>
-        </div>
-        <div class="mb-4">
-          <label for="edit-transaction-type" class="block text-gray-700 text-sm font-bold mb-2">Jenis Transaksi:</label>
-          <select id="edit-transaction-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            <option value="masuk">Kas Masuk</option>
-            <option value="keluar">Kas Keluar</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label for="edit-transaction-amount" class="block text-gray-700 text-sm font-bold mb-2">Jumlah:</label>
-          <input type="number" id="edit-transaction-amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="1" required>
-        </div>
-        <div class="mb-6">
-          <label for="edit-transaction-desc" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi:</label>
-          <textarea id="edit-transaction-desc" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
-        </div>
-        <div class="flex justify-end space-x-4">
-          <button type="button" id="cancel-edit-transaction" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Batal</button>
-          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Simpan Perubahan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="agenda-section" class="hidden min-h-screen container mx-auto p-4">
-      <button id="back-to-dashboard-agenda" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4">Kembali ke Dashboard</button>
-      <h2 class="text-2xl font-bold mb-4 text-gray-800">Manajemen Agenda</h2>
-
-      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h3 class="text-xl font-bold mb-4 text-gray-800">Tambah Agenda Baru</h3>
-          <form id="add-agenda-form">
-              <div class="mb-4">
-                  <label for="agenda-title" class="block text-gray-700 text-sm font-bold mb-2">Judul Agenda:</label>
-                  <input type="text" id="agenda-title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <form id="agenda-form" class="hidden space-y-4 mb-6">
+          <div>
+            <label class="block text-sm mb-2">Judul Agenda</label>
+            <input type="text" id="agenda-title" class="input-field" placeholder="Meeting QC" required>
+          </div>
+          <div>
+            <label class="block text-sm mb-2">Deskripsi</label>
+            <textarea id="agenda-desc" rows="3" class="input-field" placeholder="Detail agenda" required></textarea>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm mb-2">Tanggal</label>
+              <input type="date" id="agenda-date" class="input-field" required>
+            </div>
+            <div>
+              <label class="block text-sm mb-2">Lampiran</label>
+              <label for="agenda-file" class="file-upload-label">
+                <span id="agenda-file-name-display">Pilih file...</span>
+                <i class="fas fa-cloud-upload-alt"></i>
+              </label>
+              <input type="file" id="agenda-file" class="hidden">
+              <div id="agenda-attachment-preview" class="hidden mt-2 text-sm text-gray-400">
+                <span id="agenda-preview-name"></span>
+                <button type="button" id="remove-agenda-attachment" class="ml-2 text-red-400">
+                  <i class="fas fa-times"></i>
+                </button>
               </div>
-              <div class="mb-4">
-                  <label for="agenda-description" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi:</label>
-                  <textarea id="agenda-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
-              </div>
-              <div class="mb-6">
-                  <label for="agenda-date" class="block text-gray-700 text-sm font-bold mb-2">Tanggal:</label>
-                  <input type="date" id="agenda-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-              </div>
-              <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Tambah Agenda</button>
-          </form>
-      </div>
+            </div>
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button type="button" id="cancel-agenda-btn" class="px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg">
+              Batal
+            </button>
+            <button type="submit" class="btn-primary">
+              Simpan Agenda
+            </button>
+          </div>
+        </form>
 
-      <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-bold mb-4 text-gray-800">Daftar Agenda</h3>
-          <div id="agenda-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              </div>
-      </div>
-  </div>
+        <div id="agenda-list" class="space-y-4 max-h-[600px] overflow-y-auto">
+          <div class="text-center py-10">
+            <div class="loading mx-auto"></div>
+            <p class="mt-3 text-gray-400">Memuat data agenda...</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="full-sosial-section" class="solana-card p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold">Sosial Media QC</h2>
+        </div>
 
-  <div id="message-toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg hidden">
-    Pesan Anda di sini!
-  </div>
+        <form id="post-form" class="space-y-4 mb-6">
+          <div>
+            <textarea id="post-content" rows="3" class="input-field" placeholder="Apa yang ingin Anda bagikan hari ini?" required></textarea>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center">
+              <label for="post-image" class="file-upload-label mr-3">
+                <span id="image-name-display">Lampirkan Gambar/Video</span>
+                <i class="fas fa-image"></i>
+              </label>
+              <input type="file" id="post-image" accept="image/*,video/*" class="hidden">
+            </div>
+            <button type="submit" class="btn-primary">
+              Posting
+            </button>
+          </div>
+        </form>
+        
+        <div id="post-attachment-preview-container" class="hidden mt-4">
+          <img id="preview-image" class="attachment-preview w-full" alt="Preview lampiran">
+          <video id="preview-video" class="attachment-preview w-full hidden" controls></video>
+          <button id="remove-attachment" class="mt-2 text-red-400 text-sm">
+            <i class="fas fa-times mr-1"></i> Hapus lampiran
+          </button>
+        </div>
+        
+        <div id="social-feed" class="mt-8 space-y-6 max-h-[600px] overflow-y-auto">
+          <div class="text-center py-10">
+            <div class="loading mx-auto"></div>
+            <p class="mt-3 text-gray-400">Memuat postingan...</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="admin-section" class="solana-card p-6 hidden">
+        <h2 class="text-xl font-semibold mb-6">Admin Panel</h2>
+        
+        <div class="flex border-b border-gray-800 mb-6">
+          <button id="users-tab" class="py-3 px-4 font-medium tab-active">Users</button>
+          <button id="transactions-admin-tab" class="py-3 px-4 font-medium text-gray-400">Transaksi</button>
+          <button id="agendas-admin-tab" class="py-3 px-4 font-medium text-gray-400">Agenda</button>
+        </div>
+        
+        <div id="users-admin-content">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Manajemen Pengguna</h3>
+            <input type="text" id="admin-user-search" class="search-input w-64" placeholder="Cari pengguna...">
+          </div>
+          
+          <div id="users-list" class="space-y-3 max-h-[500px] overflow-y-auto">
+            <div class="text-center py-10">
+              <div class="loading mx-auto"></div>
+              <p class="mt-3 text-gray-400">Memuat data pengguna...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="transactions-admin-content" class="hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Manajemen Transaksi</h3>
+            <div class="flex space-x-2">
+              <input type="text" id="admin-transaction-search" class="search-input w-64" placeholder="Cari transaksi...">
+              <button id="admin-add-transaction-btn" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i> Tambah
+              </button>
+            </div>
+          </div>
+          
+          <div id="admin-transactions-list" class="space-y-4 max-h-[500px] overflow-y-auto">
+            <div class="text-center py-10">
+              <div class="loading mx-auto"></div>
+              <p class="mt-3 text-gray-400">Memuat data transaksi...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="agendas-admin-content" class="hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Manajemen Agenda</h3>
+            <div class="flex space-x-2">
+              <input type="text" id="admin-agenda-search" class="search-input w-64" placeholder="Cari agenda...">
+              <button id="admin-add-agenda-btn" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i> Tambah
+              </button>
+            </div>
+          </div>
+          
+          <div id="admin-agendas-list" class="space-y-4 max-h-[500px] overflow-y-auto">
+            <div class="text-center py-10">
+              <div class="loading mx-auto"></div>
+              <p class="mt-3 text-gray-400">Memuat data agenda...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  <footer class="bg-black/80 py-4 px-6 mt-8 border-t border-purple-900/50 text-center text-gray-400 text-sm">
+    <div class="container mx-auto">
+      &copy; 2024 Wallet QC. All rights reserved.
+    </div>
+  </footer>
 
   <script src="js/firebaseConfig.js"></script>
+  <script src="js/utils.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/firestore.js"></script>
   <script src="js/charts.js"></script>
-  <script src="js/transactions.js"></script>
-  <script src="js/agenda.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/main.js"></script>
 
 </body>
