@@ -1,8 +1,8 @@
-// Import Firebase Auth dan Firestore
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// login.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-// Konfigurasi (kalau belum diekspor dari firebase-config.js, pakai ini)
+// ✅ Inisialisasi Firebase dulu
 const firebaseConfig = {
   apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
   authDomain: "wallet-qc-local-storage.firebaseapp.com",
@@ -12,31 +12,23 @@ const firebaseConfig = {
   appId: "1:443546801664:web:d520fd8d2f311edd20aae5"
 };
 
+// 🔥 Jangan lupa definisikan 'app' dulu sebelum dipakai
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-// Event listener untuk form login
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
+// Login Event
+document.getElementById("loginForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const uid = userCredential.user.uid;
-
-    // Ambil role user dari Firestore berdasarkan uid
-    const userDoc = await getDoc(doc(db, "users", uid));
-    const userData = userDoc.data();
-
-    // Arahkan berdasarkan role
-    if (userData && userData.role === "admin") {
-      window.location.href = "admin.html";
-    } else {
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      alert("Login berhasil!");
       window.location.href = "dashboard.html";
-    }
-
-  } catch (error) {
-    alert("Login gagal: " + error.message);
-  }
+    })
+    .catch((error) => {
+      alert("Login gagal: " + error.message);
+    });
 });
