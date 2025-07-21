@@ -1,34 +1,39 @@
-// login.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js"; // pastikan kamu export config dari sini
 
-// ✅ Inisialisasi Firebase dulu
-const firebaseConfig = {
-  apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
-  authDomain: "wallet-qc-local-storage.firebaseapp.com",
-  projectId: "wallet-qc-local-storage",
-  storageBucket: "wallet-qc-local-storage.appspot.com",
-  messagingSenderId: "443546801664",
-  appId: "1:443546801664:web:d520fd8d2f311edd20aae5"
-};
-
-// 🔥 Jangan lupa definisikan 'app' dulu sebelum dipakai
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Login Event
-document.getElementById("loginForm").addEventListener("submit", (e) => {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      alert("Login berhasil!");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert("Login gagal: " + error.message);
-    });
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Ambil data user dari Firestore
+    const q = query(collection(db, "users"), where("email", "==", user.email));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const userData = querySnapshot.docs[0].data();
+
+      if (userData.role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "dashboard.html";
+      }
+    } else {
+      alert("Akun tidak ditemukan di database.");
+    }
+
+  } catch (error) {
+    alert("Login gagal: " + error.message);
+  }
 });
