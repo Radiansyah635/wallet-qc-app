@@ -36,7 +36,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       const role = userData.role;
 
       if (role === "admin") {
-        window.location.href = "admin-panel.html";
+        window.location.href = "admin/dashboard.html";
       } else {
         window.location.href = "dashboard.html";
       }
