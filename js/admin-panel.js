@@ -1,45 +1,93 @@
-// admin-panel.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-// Konfigurasi Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
-  authDomain: "wallet-qc-local-storage.firebaseapp.com",
-  databaseURL: "https://wallet-qc-local-storage-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "wallet-qc-local-storage",
-  storageBucket: "wallet-qc-local-storage.firebasestorage.app",
-  messagingSenderId: "443546801664",
-  appId: "1:443546801664:web:d520fd8d2f311edd20aae5",
-  measurementId: "G-KVKSD7ES9P"
-};
+import { getDatabase, ref, push, update, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { firebaseConfig } from './firebase-config.js'; // pastikan ini ada
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = getDatabase(app);
+const form = document.getElementById("formKas");
+const emailSelect = document.getElementById("email");
+const kategori = document.getElementById("kategori");
+const jumlah = document.getElementById("jumlah");
+const keterangan = document.getElementById("keterangan");
+const pesan = document.getElementById("pesan");
 
-// Tangani Form Input
-document.getElementById("formKas").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email").value.trim();
-  const kategori = document.getElementById("kategori").value;
-  const jumlah = parseInt(document.getElementById("jumlah").value);
-  const keterangan = document.getElementById("keterangan").value.trim();
-  const pesan = document.getElementById("pesan");
-
-  try {
-    await addDoc(collection(db, "transaksi_kas"), {
-      email,
-      kategori,
-      jumlah,
-      keterangan,
-      tanggal: serverTimestamp()
-    });
-    pesan.textContent = "✅ Transaksi berhasil disimpan!";
-    document.getElementById("formKas").reset();
-    window.location.href = "../admin/dashboard.html";
-  } catch (err) {
-    pesan.textContent = "❌ Gagal menyimpan: " + err.message;
-    pesan.classList.remove("text-green-600");
-    pesan.classList.add("text-red-600");
+// Ambil semua user untuk dropdown
+async function loadUsers() {
+  const dbRef = ref(db);
+  const snapshot = await get(child(dbRef, "users"));
+  if (snapshot.exists()) {
+    const users = snapshot.val();
+    for (const uid in users) {
+      const email = users[uid].email;
+      const option = document.createElement("option");
+      option.value = email;
+      option.textContent = email;
+      emailSelect.appendChild(option);
+    }
   }
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const selectedEmail = emailSelect.value;
+  const kategoriValue = kategori.value;
+  const jumlahValue = parseInt(jumlah.value);
+  const keteranganValue = keterangan.value || "-";
+  const waktu = new Date().toISOString();
+
+  if (selectedEmail === "all") {
+    const snapshot = await get(ref(db, "users"));
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      for (const uid in users) {
+        const user = users[uid];
+        const transaksiRef = ref(db, `transaksi/${uid}`);
+        await push(transaksiRef, {
+          email: user.email,
+          kategori: kategoriValue,
+          jumlah: jumlahValue,
+          keterangan: keteranganValue,
+          waktu: waktu
+        });
+
+        // Update saldo
+        const saldoLama = users[uid].saldo || 0;
+        const saldoBaru = kategoriValue === "Pemasukan" ? saldoLama + jumlahValue : saldoLama - jumlahValue;
+        await update(ref(db, `users/${uid}`), { saldo: saldoBaru });
+      }
+      pesan.textContent = "Transaksi untuk semua user berhasil disimpan.";
+    }
+  } else {
+    // Transaksi untuk 1 user saja
+    const snapshot = await get(ref(db, "users"));
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      for (const uid in users) {
+        if (users[uid].email === selectedEmail) {
+          const transaksiRef = ref(db, `transaksi/${uid}`);
+          await push(transaksiRef, {
+            email: selectedEmail,
+            kategori: kategoriValue,
+            jumlah: jumlahValue,
+            keterangan: keteranganValue,
+            waktu: waktu
+          });
+
+          // Update saldo
+          const saldoLama = users[uid].saldo || 0;
+          const saldoBaru = kategoriValue === "Pemasukan" ? saldoLama + jumlahValue : saldoLama - jumlahValue;
+          await update(ref(db, `users/${uid}`), { saldo: saldoBaru });
+
+          pesan.textContent = "Transaksi berhasil untuk user: " + selectedEmail;
+          break;
+        }
+      }
+    }
+  }
+
+  // Reset form
+  form.reset();
+  setTimeout(() => { pesan.textContent = ""; }, 3000);
 });
+
+loadUsers();
