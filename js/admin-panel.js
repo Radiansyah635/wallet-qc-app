@@ -1,4 +1,4 @@
-  <script>
+
         // Konfigurasi Firebase (ganti dengan konfigurasi Anda)
         const firebaseConfig = {
             apiKey: "AIzaSyDummyKey-ChangeWithYourOwn",
@@ -249,4 +249,4 @@
         
         // Initialize
         loadUsers();
-    </script>
+    
