@@ -36,6 +36,7 @@ document.getElementById("formKas").addEventListener("submit", async (e) => {
     });
     pesan.textContent = "✅ Transaksi berhasil disimpan!";
     document.getElementById("formKas").reset();
+    window.location.href = "../admin/dashboard.html";
   } catch (err) {
     pesan.textContent = "❌ Gagal menyimpan: " + err.message;
     pesan.classList.remove("text-green-600");
