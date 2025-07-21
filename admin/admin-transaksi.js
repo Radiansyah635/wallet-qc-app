@@ -62,4 +62,5 @@ document.getElementById("transaksiForm").addEventListener("submit", async (e) =>
 
   alert("Transaksi berhasil ditambahkan!");
   e.target.reset();
+  window.location.href = "../admin/dashboard.html";
 });
