@@ -13,8 +13,11 @@
     <h2 class="text-xl font-bold text-indigo-600 mb-4 text-center">Input Transaksi Kas</h2>
     
     <form id="formKas" class="space-y-4">
-      <input type="email" id="email" placeholder="Email user" required class="w-full px-4 py-2 border rounded-md" />
-
+      <select id="email" required class="w-full px-4 py-2 border rounded-md">
+  <option value="">Pilih Email atau Semua</option>
+  <option value="all">Semua User</option>
+  <!-- Email user akan diisi otomatis dari JS -->
+      </select>
       <select id="kategori" required class="w-full px-4 py-2 border rounded-md">
         <option value="">Pilih Kategori</option>
         <option value="Pemasukan">Pemasukan</option>
