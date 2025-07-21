@@ -1,55 +1,87 @@
+<!-- admin/dashboard.html -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Admin</title>
-  <link rel="stylesheet" href="./css/admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="admin.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <h1>Dashboard Admin</h1>
-    <button id="logoutBtn">Logout</button>
-  </header>
+<body class="bg-gray-100 text-gray-800">
 
-  <main>
-    <section>
-      <h2>Data User</h2>
-      <table id="userTable">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Total Kas</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Diisi oleh JS -->
-        </tbody>
-      </table>
-    </section>
-    
-    <section class="mt-6">
-  <h2>Input Transaksi</h2>
-  <form id="transaksiForm" class="grid gap-4 max-w-md p-4 border rounded bg-white">
-    <select id="userSelect" required class="p-2 border rounded">
-      <option value="">Pilih User</option>
-    </select>
-    <select id="tipeTransaksi" required class="p-2 border rounded">
-      <option value="masuk">Kas Masuk</option>
-      <option value="keluar">Kas Keluar</option>
-    </select>
-    <input type="number" id="jumlahTransaksi" placeholder="Jumlah" required class="p-2 border rounded" />
-    <input type="text" id="deskripsiTransaksi" placeholder="Deskripsi" class="p-2 border rounded" />
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Kirim</button>
-  </form>
-</section>
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md hidden md:block">
+      <div class="p-4 text-xl font-bold border-b">Admin Panel</div>
+      <nav class="p-4">
+        <ul class="space-y-2">
+          <li><a href="#" class="block px-3 py-2 hover:bg-gray-200 rounded">🏠 Dashboard</a></li>
+          <li><a href="panel-transaksi.html" class="block px-3 py-2 hover:bg-gray-200 rounded">💰 Transaksi</a></li>
+          <li><a href="#" class="block px-3 py-2 hover:bg-gray-200 rounded">👥 User</a></li>
+          <li><a href="#" class="block px-3 py-2 hover:bg-gray-200 rounded">📝 Post</a></li>
+          <li><a href="#" class="block px-3 py-2 hover:bg-gray-200 rounded">📅 Agenda</a></li>
+          <li><a href="#" class="block px-3 py-2 hover:bg-gray-200 rounded">⚙️ Pengaturan</a></li>
+          <li><a href="../index.html" class="block px-3 py-2 hover:bg-gray-200 rounded text-red-600">🚪 Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
 
-    <section>
-      <h2>Grafik Kas Keseluruhan</h2>
-      <canvas id="grafikKas" width="400" height="200"></canvas>
-    </section>
-  </main>
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <h1 class="text-2xl font-semibold mb-4">Selamat datang, Admin 👋</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold">Total Saldo Kas</h2>
+          <p class="text-2xl font-bold text-green-600 mt-2">Rp 12.000.000</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold">Jumlah User</h2>
+          <p class="text-2xl font-bold text-blue-600 mt-2">35 orang</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold">Agenda Aktif</h2>
+          <p class="text-2xl font-bold text-purple-600 mt-2">5 kegiatan</p>
+        </div>
+      </div>
+
+      <!-- Grafik Dummy -->
+      <div class="bg-white p-4 rounded shadow mb-6">
+        <h2 class="text-lg font-semibold mb-2">Grafik Kas Masuk & Keluar (Mock)</h2>
+        <div class="h-40 bg-gray-100 flex items-center justify-center text-gray-400">[ Grafik Placeholder ]</div>
+      </div>
+
+      <!-- Ringkasan Transaksi Terbaru -->
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-lg font-semibold mb-2">Transaksi Terbaru</h2>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="py-2 px-3 text-left">User</th>
+              <th class="py-2 px-3 text-left">Jenis</th>
+              <th class="py-2 px-3 text-left">Nominal</th>
+              <th class="py-2 px-3 text-left">Tanggal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b">
+              <td class="py-2 px-3">Doni</td>
+              <td class="py-2 px-3">Masuk</td>
+              <td class="py-2 px-3 text-green-600">Rp 500.000</td>
+              <td class="py-2 px-3">2025-07-19</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3">Siti</td>
+              <td class="py-2 px-3">Keluar</td>
+              <td class="py-2 px-3 text-red-600">Rp 150.000</td>
+              <td class="py-2 px-3">2025-07-18</td>
+            </tr>
+            <!-- Tambahkan baris lain jika perlu -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
 </body>
-</html>
+  </html>
