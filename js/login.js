@@ -1,39 +1,51 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { firebaseConfig } from "./firebase-config.js"; // pastikan kamu export config dari sini
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
+// Konfigurasi Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyD0RL0zvv4DL9EBax3XouugVZpkHdzyVNQ",
+  authDomain: "wallet-qc-local-storage.firebaseapp.com",
+  projectId: "wallet-qc-local-storage",
+  storageBucket: "wallet-qc-local-storage.appspot.com",
+  messagingSenderId: "443546801664",
+  appId: "1:443546801664:web:d520fd8d2f311edd20aae5"
+};
+
+// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Login handler
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    const uid = userCredential.user.uid;
 
-    // Ambil data user dari Firestore
-    const q = query(collection(db, "users"), where("email", "==", user.email));
-    const querySnapshot = await getDocs(q);
+    // Ambil data role user dari Firestore
+    const userDocRef = doc(db, "users", uid);
+    const userSnapshot = await getDoc(userDocRef);
 
-    if (!querySnapshot.empty) {
-      const userData = querySnapshot.docs[0].data();
+    if (userSnapshot.exists()) {
+      const userData = userSnapshot.data();
+      const role = userData.role;
 
-      if (userData.role === "admin") {
+      if (role === "admin") {
         window.location.href = "admin.html";
       } else {
         window.location.href = "dashboard.html";
       }
     } else {
-      alert("Akun tidak ditemukan di database.");
+      alert("User tidak ditemukan di database Firestore");
     }
 
   } catch (error) {
     alert("Login gagal: " + error.message);
+    console.error(error);
   }
 });
