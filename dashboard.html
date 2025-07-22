@@ -1,27 +1,218 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kas</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Wallet QC</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="avatar">
+          <img src="images/user-avatar.jpg" alt="User Avatar" id="userAvatar">
+          <span class="online-status"></span>
+        </div>
+        <div class="profile-info">
+          <h3 id="usernameDisplay">Radian Surya</h3>
+          <p id="userEmail">radian@example.com</p>
+          <p class="user-role-badge" id="userRoleBadge">Admin</p>
+        </div>
+      </div>
 
-  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-    <h1 class="text-2xl font-bold text-indigo-600 mb-4">Dashboard Kas</h1>
+      <nav class="main-menu">
+        <ul>
+          <li class="active" data-content="agenda">
+            <a href="#">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Agenda</span>
+            </a>
+          </li>
+          <li data-content="social">
+            <a href="#">
+              <i class="fas fa-users"></i>
+              <span>Social Media</span>
+            </a>
+          </li>
+          <li data-content="transactions">
+            <a href="#">
+              <i class="fas fa-exchange-alt"></i>
+              <span>Transaksi</span>
+            </a>
+          </li>
+          <li data-content="analytics">
+            <a href="#">
+              <i class="fas fa-chart-line"></i>
+              <span>Analytics</span>
+            </a>
+          </li>
+          <li data-content="settings">
+            <a href="#">
+              <i class="fas fa-cog"></i>
+              <span>Pengaturan</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
-    <p class="text-gray-700 mb-2">Selamat datang, <span id="userEmail" class="font-semibold text-black">...</span></p>
+      <div class="quick-actions">
+        <h4>Menu Cepat</h4>
+        <button class="quick-btn" id="newPostBtn">
+          <i class="fas fa-plus"></i> Post Baru
+        </button>
+        <button class="quick-btn" id="newTransactionBtn">
+          <i class="fas fa-money-bill-wave"></i> Transaksi
+        </button>
+      </div>
 
-    <div class="bg-green-100 text-green-800 px-4 py-2 rounded-md mt-4 mb-6">
-      Total Saldo Kas: <span class="font-bold text-lg">Rp 0</span> <br />
-      (Dummy untuk sekarang)
-    </div>
+      <div class="logout-area">
+        <button id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i> Keluar
+        </button>
+      </div>
+    </aside>
 
-    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">Logout</button>
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="content-header">
+        <h1 id="contentTitle">Agenda</h1>
+        <div class="header-actions">
+          <div class="search-box">
+            <input type="text" placeholder="Cari...">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dynamic Content Area -->
+      <div class="content-area">
+        <!-- Agenda Content (Default) -->
+        <div class="content-section" id="agendaContent">
+          <div class="agenda-container">
+            <div class="agenda-header">
+              <h2>Agenda Terbaru</h2>
+              <button class="btn-primary" id="addAgendaBtn">
+                <i class="fas fa-plus"></i> Tambah Agenda
+              </button>
+            </div>
+            
+            <div class="agenda-list">
+              <!-- Agenda items will be loaded here -->
+            </div>
+          </div>
+          
+          <div class="social-feed">
+            <div class="feed-header">
+              <h2>Social Feed</h2>
+            </div>
+            <div class="post-form">
+              <textarea placeholder="Apa yang ingin Anda bagikan?"></textarea>
+              <div class="post-actions">
+                <div class="file-upload">
+                  <label for="mediaUpload">
+                    <i class="fas fa-camera"></i> Media
+                  </label>
+                  <input type="file" id="mediaUpload" accept="image/*,video/*" multiple>
+                </div>
+                <button class="btn-primary">Posting</button>
+              </div>
+            </div>
+            <div class="posts-container">
+              <!-- Posts will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Content -->
+        <div class="content-section" id="socialContent" style="display:none;">
+          <div class="social-container">
+            <h2>Social Media</h2>
+            <!-- Social content will be loaded here -->
+          </div>
+        </div>
+
+        <!-- Transactions Content -->
+        <div class="content-section" id="transactionsContent" style="display:none;">
+          <div class="transactions-container">
+            <h2>Riwayat Transaksi</h2>
+            <!-- Transactions will be loaded here -->
+          </div>
+        </div>
+
+        <!-- Analytics Content -->
+        <div class="content-section" id="analyticsContent" style="display:none;">
+          <div class="analytics-container">
+            <div class="stats-cards">
+              <div class="stat-card">
+                <h3>Total Kas</h3>
+                <p class="amount">Rp 12,450,000</p>
+                <p class="change positive">+12% dari bulan lalu</p>
+              </div>
+              <div class="stat-card">
+                <h3>Transaksi</h3>
+                <p class="amount">48</p>
+                <p class="change positive">+5 dari bulan lalu</p>
+              </div>
+              <div class="stat-card">
+                <h3>Pengguna Aktif</h3>
+                <p class="amount">124</p>
+                <p class="change negative">-3 dari bulan lalu</p>
+              </div>
+            </div>
+            
+            <div class="chart-container">
+              <canvas id="transactionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="content-section" id="settingsContent" style="display:none;">
+          <div class="settings-container">
+            <h2>Pengaturan Profil</h2>
+            <!-- Settings form will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <script type="module" src="./js/dashboard.js"></script>
+  <!-- Modal for Agenda -->
+  <div class="modal" id="agendaModal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Tambah Agenda Baru</h2>
+      <form id="agendaForm">
+        <div class="form-group">
+          <label for="agendaTitle">Judul Agenda</label>
+          <input type="text" id="agendaTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="agendaDate">Tanggal</label>
+          <input type="date" id="agendaDate" required>
+        </div>
+        <div class="form-group">
+          <label for="agendaDesc">Deskripsi</label>
+          <textarea id="agendaDesc" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="agendaFile">Lampiran</label>
+          <input type="file" id="agendaFile">
+        </div>
+        <button type="submit" class="btn-primary">Simpan Agenda</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
-</html>
+  </html>
