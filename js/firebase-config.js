@@ -84,25 +84,6 @@ function checkAuthState(callback) {
     callback(user);
   });
 }
-// Fungsi untuk mendapatkan role user
-async function getUserRole(uid) {
-  try {
-    const userDoc = await getDoc(doc(db, "users", uid));
-    if (userDoc.exists()) {
-      return userDoc.data().role || 'user'; // Default ke 'user' jika role tidak ada
-    }
-    return 'user';
-  } catch (error) {
-    console.error("Error getting user role:", error);
-    return 'user';
-  }
-}
-
-// Tambahkan ke export
-export {
-  // ... ekspor lainnya
-  getUserRole
-};
 
 // Fungsi untuk mendapatkan data user dari Firestore
 async function getUserData(uid) {
