@@ -367,15 +367,77 @@
     
     <p class="register-link">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-
-  <!-- File konfigurasi Firebase -->
-  <script src="./js/firebase-config.js"></script>
-
-  <!-- File logic login -->
-  <script src="./js/login.js"></script>
+  
+  <script>
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+    
+    // Form submission
+    const loginForm = document.getElementById('loginForm');
+    
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      // Simple validation
+      if (!email || !password) {
+        alert('Please fill in both fields');
+        return;
+      }
+      
+      // Simulate loading
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+      submitBtn.disabled = true;
+      
+      // Simulate API call
+      setTimeout(() => {
+        alert(`Login successful!\nEmail: ${email}`);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        loginForm.reset();
+      }, 1500);
+    });
+    
+    // Create background particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 20;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 50 + 10;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const opacity = Math.random() * 0.1 + 0.05;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.opacity = opacity;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+    });
+  </script>
 </body>
-  </html>
+                                                                </html>
