@@ -367,136 +367,43 @@
     
     <p class="register-link">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
-  
-  <script>
-        // ======================
-        // UNIVERSAL AUTH SYSTEM
-        // ======================
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
-            
-            // AUTO-REDIRECT LOGIC
-            if(currentUser.isLoggedIn) {
-                if(currentUser.role === 'admin') showAdminDashboard();
-                else showUserDashboard();
-                return;
-            } else {
-                showLoginPage();
-            }
+  <script type="module">
+  import { authSystem } from './auth-system.js';
 
-            // ======================
-            // LOGIN PAGE FUNCTIONALITY
-            // ======================
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            
-            togglePassword?.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
-            });
+  document.addEventListener('DOMContentLoaded', () => {
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    togglePassword?.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
 
-            document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-
-                // Simple validation
-                if (!email || !password) {
-                    alert('Please fill in both fields');
-                    return;
-                }
-
-                // Simulate API call
-                simulateLogin(email, password);
-            });
-
-            // ======================
-            // DASHBOARD FUNCTIONALITY
-            // ======================
-            document.getElementById('logoutBtn')?.addEventListener('click', logout);
-            document.getElementById('adminLogoutBtn')?.addEventListener('click', logout);
-
-            // ======================
-            // PARTICLE EFFECT (for login page)
-            // ======================
-            if(document.getElementById('particles')) {
-                createParticles();
-            }
-        });
-
-        // ======================
-        // CORE FUNCTIONS
-        // ======================
-        function simulateLogin(email, password) {
-            // In real app, replace with fetch() to your backend
-            const submitBtn = document.querySelector('#loginForm button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = 'Authenticating...';
-            submitBtn.disabled = true;
-
-            setTimeout(() => {
-                // Determine user role (in real app, this comes from backend)
-                const role = email.includes('@admin.') ? 'admin' : 'user';
-                
-                // Save user data
-                const userData = {
-                    email: email,
-                    role: role,
-                    isLoggedIn: true
-                };
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-
-                // Redirect based on role
-                if(role === 'admin') {
-                    showAdminDashboard();
-                } else {
-                    showUserDashboard();
-                }
-            }, 1500);
-        }
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            showLoginPage();
-        }
-
-        function showLoginPage() {
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('userDashboard').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'none';
-        }
-
-        function showUserDashboard() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'none';
-            document.getElementById('userDashboard').style.display = 'block';
-            document.getElementById('userEmail').textContent = user.email;
-        }
-
-        function showAdminDashboard() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('userDashboard').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'block';
-            document.getElementById('adminEmail').textContent = user.email;
-        }
-
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for(let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.width = `${Math.random() * 30 + 10}px`;
-                particle.style.height = particle.style.width;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.opacity = Math.random() * 0.3 + 0.1;
-                container.appendChild(particle);
-            }
-        }
+    // Form submission
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+      
+      try {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Logging in...';
+        
+        await authSystem.login(email, password);
+        
+        // Redirect akan ditangani oleh authSystem.handleRedirect()
+      } catch (error) {
+        alert(`Login failed: ${error.message}`);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+      }
+    });
+  });
   </script>
+
 </body>
                                                                 </html>
