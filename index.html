@@ -369,75 +369,134 @@
   </div>
   
   <script>
-    // Toggle password visibility
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-    
-    togglePassword.addEventListener('click', function() {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-    });
-    
-    // Form submission
-    const loginForm = document.getElementById('loginForm');
-    
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      
-      // Simple validation
-      if (!email || !password) {
-        alert('Please fill in both fields');
-        return;
-      }
-      
-      // Simulate loading
-      const submitBtn = loginForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
-      submitBtn.disabled = true;
-      
-      // Simulate API call
-      setTimeout(() => {
-        alert(`Login successful!\nEmail: ${email}`);
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        loginForm.reset();
-      }, 1500);
-    });
-    
-    // Create background particles
-    function createParticles() {
-      const particlesContainer = document.getElementById('particles');
-      const particleCount = 20;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random properties
-        const size = Math.random() * 50 + 10;
-        const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        const opacity = Math.random() * 0.1 + 0.05;
-        
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${posX}%`;
-        particle.style.top = `${posY}%`;
-        particle.style.opacity = opacity;
-        
-        particlesContainer.appendChild(particle);
-      }
-    }
-    
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function() {
-      createParticles();
-    });
+        // ======================
+        // UNIVERSAL AUTH SYSTEM
+        // ======================
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            
+            // AUTO-REDIRECT LOGIC
+            if(currentUser.isLoggedIn) {
+                if(currentUser.role === 'admin') showAdminDashboard();
+                else showUserDashboard();
+                return;
+            } else {
+                showLoginPage();
+            }
+
+            // ======================
+            // LOGIN PAGE FUNCTIONALITY
+            // ======================
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            togglePassword?.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+            });
+
+            document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                // Simple validation
+                if (!email || !password) {
+                    alert('Please fill in both fields');
+                    return;
+                }
+
+                // Simulate API call
+                simulateLogin(email, password);
+            });
+
+            // ======================
+            // DASHBOARD FUNCTIONALITY
+            // ======================
+            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+            document.getElementById('adminLogoutBtn')?.addEventListener('click', logout);
+
+            // ======================
+            // PARTICLE EFFECT (for login page)
+            // ======================
+            if(document.getElementById('particles')) {
+                createParticles();
+            }
+        });
+
+        // ======================
+        // CORE FUNCTIONS
+        // ======================
+        function simulateLogin(email, password) {
+            // In real app, replace with fetch() to your backend
+            const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Authenticating...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                // Determine user role (in real app, this comes from backend)
+                const role = email.includes('@admin.') ? 'admin' : 'user';
+                
+                // Save user data
+                const userData = {
+                    email: email,
+                    role: role,
+                    isLoggedIn: true
+                };
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+
+                // Redirect based on role
+                if(role === 'admin') {
+                    showAdminDashboard();
+                } else {
+                    showUserDashboard();
+                }
+            }, 1500);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            showLoginPage();
+        }
+
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('userDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+        }
+
+        function showUserDashboard() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('userDashboard').style.display = 'block';
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        function showAdminDashboard() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('userDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            document.getElementById('adminEmail').textContent = user.email;
+        }
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for(let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = `${Math.random() * 30 + 10}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                container.appendChild(particle);
+            }
+        }
   </script>
 </body>
                                                                 </html>
