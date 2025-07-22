@@ -1,12 +1,3 @@
-// Import Firebase
-import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-import { app } from "./firebase-config.js";
-
-// Initialize Firebase
-const auth = getAuth(app);
-const db = getFirestore(app);
-
 // DOM Elements
 const usernameDisplay = document.getElementById('usernameDisplay');
 const userEmail = document.getElementById('userEmail');
@@ -27,26 +18,60 @@ const agendaList = document.querySelector('.agenda-list');
 // Chart Elements
 const transactionChart = document.getElementById('transactionChart');
 
-// Load User Data
+// Import Firebase
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { app } from "./firebase-config.js";
+
+// Inisialisasi Firebase
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Fungsi untuk memeriksa status login
+function checkAuthStatus() {
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe(); // Berhenti listen setelah dapat status
+      if (!user) {
+        // Redirect ke login jika belum login
+        window.location.href = 'login.html';
+      }
+      resolve(user);
+    });
+  });
+}
+
+// Fungsi untuk memuat data user
 async function loadUserData() {
-  const user = auth.currentUser;
-  
-  if (user) {
-    // Set basic info from auth
-    userEmail.textContent = user.email;
+  try {
+    const user = await checkAuthStatus();
     
+    if (!user) return;
+
+    // Set basic info from auth
+    const userEmailElement = document.getElementById('userEmail');
+    if (userEmailElement) {
+      userEmailElement.textContent = user.email;
+    }
+
     // Get additional info from Firestore
     const userDoc = await getDoc(doc(db, "users", user.uid));
     
     if (userDoc.exists()) {
       const userData = userDoc.data();
-      usernameDisplay.textContent = userData.username || 'User';
+      const usernameDisplay = document.getElementById('usernameDisplay');
+      const userRoleBadge = document.getElementById('userRoleBadge');
+      
+      if (usernameDisplay) {
+        usernameDisplay.textContent = userData.username || 'User';
+      }
       
       // Set role badge
-      if (userData.role === 'admin') {
-        userRoleBadge.textContent = 'Admin';
-        userRoleBadge.style.backgroundColor = var(--solana-purple);
-        
+      if (userRoleBadge) {
+        if (userData.role === 'admin') {
+          userRoleBadge.textContent = 'Admin';
+          userRoleBadge.style.backgroundColor = 'var(--solana-purple)';
+      
         // Show admin-specific elements
         document.getElementById('newTransactionBtn').style.display = 'flex';
       } else {
